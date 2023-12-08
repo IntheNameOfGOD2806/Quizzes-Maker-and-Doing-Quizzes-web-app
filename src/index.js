@@ -14,6 +14,8 @@ import Admin from './components/Admin/Admin';
 import Contact from './routes/contact';
 import Header from './components/Header/Header';
 import Homepage from './components/Home/HomePage';
+import DashBoard from './components/Admin/Content/DashBoard';
+import ManageUser from './components/Admin/Content/ManageUser';
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
@@ -38,14 +40,27 @@ const router = createBrowserRouter([
         element: <User></User>,
         errorElement: <ErrorPage></ErrorPage>
       },
-      {
-        path: "/Admin",
-        element: <Admin></Admin>,
-        errorElement: <ErrorPage></ErrorPage>
-      }
-    ,
     ],
   },
+  {
+    path: "/Admin",
+    element: <Admin></Admin>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children:[
+      {
+        index:true,
+        element:<DashBoard></DashBoard>,
+        errorElement: <ErrorPage></ErrorPage>
+      }
+      ,
+      {
+        path:"ManageUser",
+        element:<ManageUser></ManageUser>,
+        errorElement: <ErrorPage></ErrorPage>
+      }
+    ]
+  }
+,
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
