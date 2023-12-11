@@ -7,7 +7,10 @@ import {
   SidebarHeader,
   SidebarFooter,
   SidebarContent,
+  
 } from 'react-pro-sidebar';
+import { NavLink } from 'react-router-dom';
+
 import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart,FaAirbnb } from 'react-icons/fa';
 import { MdOutlineQuiz } from "react-icons/md";
 import { DiGithubBadge } from "react-icons/di";
@@ -50,7 +53,10 @@ const SideBar = (props) => {
             icon={<FaTachometerAlt />}
             // suffix={<span className="badge red">Dat</span>}
           >
-            dashboard
+            <NavLink to=''>
+              dashboard
+            </NavLink>
+            
           </MenuItem>
           <MenuItem icon={<FaGem />}> components</MenuItem>
         </Menu>
@@ -60,7 +66,10 @@ const SideBar = (props) => {
             
             icon={<FaGem />}
           >
-            <MenuItem> Manage Users</MenuItem>
+             <NavLink to='ManageUser'>
+             <MenuItem> Manage Users</MenuItem>
+             </NavLink>
+            
             <MenuItem> Manage Quizs</MenuItem>
             <MenuItem> Manage Questions</MenuItem>
           </SubMenu>

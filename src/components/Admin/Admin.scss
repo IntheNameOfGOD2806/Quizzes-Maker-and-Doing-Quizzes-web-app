@@ -1,11 +1,16 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+//override variable from react-pro-sidebar
+$sidebar-bg-color: #1d1d1d ;
+$sidebar-width: 300px ;
+$icon-bg-color: rgb(255, 0, 0);
+// import 
+@import '~react-pro-sidebar/dist/scss/styles.scss';
 
-$sidebar-bg-color: #0c1e35;
-$submenu-bg-color: rgba(255, 255, 255, 0.05);
+$submenu-bg-color: rgba(0, 17, 255, 0.05);
 $submenu-bg-color-collapsed: rgba(#0c1e35, 0.95);
 $sidebar-color: #b3b8d4;
 $highlight-color: #dee2ec;
-$icon-bg-color: rgba(255, 255, 255, 0.05);
+
 $icon-size: 35px;
 .admin-container {
   display: flex;
@@ -14,6 +19,7 @@ $icon-size: 35px;
       .pro-sidebar {
         height: 100vh;
         .pro-sidebar-inner {
+
         }
       }
     }

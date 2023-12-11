@@ -8,14 +8,16 @@ const Admin = () => {
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
+        {/* side bar component */}
         <SideBar collapsed={collapse}></SideBar>
       </div>
       <div className="admin-content">
         <div className="admin-header">
+          {/* set collapse bar */}
           <FaBars onClick={() => setCollapse(!collapse)}></FaBars>
         </div>
         <div className="admin-main">
-          {" "}
+          {/* {/* main content} */}
           <Outlet></Outlet>
         </div>
       </div>
