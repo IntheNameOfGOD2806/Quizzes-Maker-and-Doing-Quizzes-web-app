@@ -1,15 +1,15 @@
 import { useState } from "react";
-
+import { toast } from "react-toastify";
 import imageP from "../../../assets/pexels-steve-johnson-1000366.jpg";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaUpload } from "react-icons/fa";
 import axios from "axios";
+import { postCreateUser } from "../../../services/apiservice";
 function ModalUser(props) {
   const style1 = { color: "#0B5ED7" };
   const { show, setShow } = props;
   const handleClose = () => {
-    
     setShow(false);
     setEmail("");
     setPassword("");
@@ -17,7 +17,7 @@ function ModalUser(props) {
     setRole("USER");
     setPreviewimage(null);
     setImage(null);
-  }
+  };
   const handleShow = () => setShow(true);
   //statelization
   const [email, setEmail] = useState("");
@@ -26,7 +26,6 @@ function ModalUser(props) {
   const [previewimage, setPreviewimage] = useState(null);
   const [role, setRole] = useState("USER");
   const [image, setImage] = useState(null);
-
   // Handle upload image
   const handleUploadImage = (e) => {
     if (e.target && e.target.files[0] && e.target.files) {
@@ -38,29 +37,55 @@ function ModalUser(props) {
     }
   };
   //handle submit user
-  const handleSubmitUser = async() => {
+  const handleSubmitUser = async () => {
+    // validate
+    if (!validateEmail(email)) {
+      toast.error("Email not valid", {
+        position: toast.POSITION.BOTTOM_CENTER,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
+      return;
+    }
+    if (!password) {
+      toast.error("please enter password", {
+        position: toast.POSITION.BOTTOM_CENTER,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
+      return;
+    }
+    //submit data
+    let data = await postCreateUser(email, password, username, role, image);
+   
     
-
-    //validate
-
-    //call api
-    //  let data={
-    //   email:email,
-    //   password:password,
-    //   username:username,
-    //   role:role,
-    //   userImage:image
-    //  }
-    //  console.log(data)
-    const form = new FormData();
-    form.append("email", email);
-    form.append("password", password);
-    form.append("username", username);
-    form.append("role", role);
-    form.append("userImage",image);
-
-   let res=await axios.post("http://localhost:8081/api/v1/participant", form);
-   console.log(res)
+    if (data && data.EC === 0) {
+      toast.success("Add user success", {
+        position: toast.POSITION.TOP_RIGHT,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
+      handleClose();
+    }
+    if (data && data.EC !== 0) {
+      toast.error(data.EM, {
+        position: toast.POSITION.TOP_RIGHT,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
+    }
+  };
+  //validate
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
   };
   // return
   return (
@@ -85,12 +110,21 @@ function ModalUser(props) {
                 Email
               </label>
               <input
+                autoComplete="on"
                 type="email"
                 className="form-control"
                 id="inputEmail4"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              <div className="email-status">
+                {validateEmail(email) && (
+                  <span style={{ color: "green" }}>email is valid</span>
+                )}
+                {!validateEmail(email) && email !== "" && (
+                  <span style={{ color: "red" }}>email is invalid</span>
+                )}
+              </div>
             </div>
             <div className="col-md-6">
               <label for="inputPassword4" className="form-label">
@@ -111,7 +145,7 @@ function ModalUser(props) {
               <input
                 type="text"
                 className="form-control"
-                id="inputAddress"
+                id="inputUsername"
                 placeholder="User Name"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
