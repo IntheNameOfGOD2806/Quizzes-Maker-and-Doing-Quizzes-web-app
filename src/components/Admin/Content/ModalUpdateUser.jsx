@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import imageP from "../../../assets/pexels-steve-johnson-1000366.jpg";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaUpload } from "react-icons/fa";
 import axios from "axios";
-import { postCreateUser } from "../../../services/apiservice";
-function ModalUser(props) {
+import { putUpdateUser } from "../../../services/apiservice";
+import _ from "lodash";
+const ModalUpdateUser = (props) => {
   const style1 = { color: "#0B5ED7" };
   const { show, setShow } = props;
-  const { reRenderListUser } = props;
-  const{page,setPage}=props;
+  const { userUpdateData, setUserUpdateData } = props;
   //statelization
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,6 +18,24 @@ function ModalUser(props) {
   const [previewimage, setPreviewimage] = useState(null);
   const [role, setRole] = useState("USER");
   const [image, setImage] = useState(null);
+
+  useEffect(() => {
+     console.log("useeffect")
+    if (!_.isEmpty(userUpdateData)) {
+     
+      //   console.log(
+      //     "🚀 ~ file: ModalUpdateUser.jsx:18 ~ useEffect ~ userDataUpdate:",
+      //     userUpdateData
+      //   );
+      setEmail(userUpdateData.email);
+      setUsername(userUpdateData.username);
+      userUpdateData.image && setPreviewimage(`data:image/jpeg;base64,${userUpdateData.image}`);
+      setRole(userUpdateData.role);
+
+      //   console.log(role)
+    }
+  }, [userUpdateData]);
+
   const handleClose = () => {
     setShow(false);
     setEmail("");
@@ -26,8 +44,8 @@ function ModalUser(props) {
     setRole("USER");
     setPreviewimage(null);
     setImage(null);
+    setUserUpdateData({});
   };
-
   // Handle upload image
   const handleUploadImage = (e) => {
     if (e.target && e.target.files[0] && e.target.files) {
@@ -39,40 +57,22 @@ function ModalUser(props) {
     }
   };
   //handle submit user
-  const handleSubmitUser = async () => {
+  const handleUpdateUser = async () => {
     // validate
-    if (!validateEmail(email)) {
-      toast.error("Email not valid", {
-        position: toast.POSITION.BOTTOM_CENTER,
-        className: "foo-bar",
-        autoClose: 2000,
-        draggable: true,
-      });
-      return;
-    }
-    if (!password) {
-      toast.error("please enter password", {
-        position: toast.POSITION.BOTTOM_CENTER,
-        className: "foo-bar",
-        autoClose: 2000,
-        draggable: true,
-      });
-      return;
-    }
+
     //submit data
-    let data = await postCreateUser(email, password, username, role, image);
-   
-    
+    let data = await putUpdateUser(userUpdateData.id, username, role, image);
     if (data && data.EC === 0) {
-      toast.success("Add user success", {
+      toast.success("Update user success", {
         position: toast.POSITION.TOP_RIGHT,
         className: "foo-bar",
         autoClose: 2000,
         draggable: true,
       });
+      // re render list users
+      await props.reRenderListUser();
+      //close modal
       handleClose();
-      setPage(1);
-        
     }
     if (data && data.EC !== 0) {
       toast.error(data.EM, {
@@ -82,8 +82,6 @@ function ModalUser(props) {
         draggable: true,
       });
     }
-    // re render
- 
   };
   //validate
   const validateEmail = (email) => {
@@ -94,14 +92,11 @@ function ModalUser(props) {
       );
   };
   // return
-  if(props.modalUpdateUser===true){
-
-  }
   return (
     <>
       {/* <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button> */}
+          Launch demo modal
+        </Button> */}
       <Modal
         size="xl"
         show={show}
@@ -110,7 +105,7 @@ function ModalUser(props) {
         className="modal-user"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add new User</Modal.Title>
+          <Modal.Title>Update User Infor</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form className="row g-3">
@@ -119,6 +114,7 @@ function ModalUser(props) {
                 Email
               </label>
               <input
+                disabled
                 autoComplete="on"
                 type="email"
                 className="form-control"
@@ -126,20 +122,21 @@ function ModalUser(props) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <div className="email-status">
+              {/* <div className="email-status">
                 {validateEmail(email) && (
                   <span style={{ color: "green" }}>email is valid</span>
                 )}
                 {!validateEmail(email) && email !== "" && (
                   <span style={{ color: "red" }}>email is invalid</span>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="col-md-6">
               <label for="inputPassword4" className="form-label">
                 Password
               </label>
               <input
+                disabled
                 type="password"
                 className="form-control"
                 id="inputPassword4"
@@ -164,16 +161,24 @@ function ModalUser(props) {
               <label for="inputRole" className="form-label">
                 Role
               </label>
+
               <select
                 id="inputState"
                 className="form-select"
                 onChange={(e) => setRole(e.target.value)}
               >
-                <option default value={"USER"}>
-                  USER
-                </option>
-                <option value={"ADMIN"}>ADMIN</option>
-                <option>...</option>
+                {role === "ADMIN" && (
+                  <>
+                    <option value={"USER"}>ADMIN</option>
+                    <option value={"ADMIN"}>USER</option>
+                  </>
+                )}
+                {role === "USER" && (
+                  <>
+                    <option value={"USER"}>USER</option>
+                    <option value={"ADMIN"}>ADMIN</option>
+                  </>
+                )}
               </select>
             </div>
             <div className="col-md-12">
@@ -205,12 +210,12 @@ function ModalUser(props) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSubmitUser}>
+          <Button variant="primary" onClick={handleUpdateUser}>
             Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
-}
-export default ModalUser;
+};
+export default ModalUpdateUser;

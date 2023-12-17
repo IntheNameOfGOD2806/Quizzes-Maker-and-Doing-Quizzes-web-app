@@ -1,11 +1,26 @@
-import { useState, useEffect, useLayoutEffect } from "react";
 import "animate.css";
 import _ from "lodash";
-import TableUserPaginate from "./TableUserPaginate";
-const TableUser = (props) => {
+import ReactPaginate from "react-paginate";
+import { useState, useEffect } from "react";
+//
+
+const TableUserPaginate = (props) => {
   //   const [listUser, setListUser] = useState([]);
   const { listUser } = props;
+  //   const{itemsPerPage}=props
   const isDataEmpty = _.isEmpty(listUser);
+  const { pageCount } = props;
+  const { setPage } = props;
+  const{page}=props
+  
+
+  const handlePageClick = (event) => {
+    const selectedPage = +event.selected + 1;
+   
+    setPage(selectedPage);
+    
+
+  };
 
   return (
     <>
@@ -16,7 +31,7 @@ const TableUser = (props) => {
             <th scope="col">User Name</th>
             <th scope="col">Email</th>
             <th scope="col">Role</th>
-            <th scope="col">Action</th>
+            <th style={{ display:"flex", justifyContent:"center" }} scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -29,7 +44,7 @@ const TableUser = (props) => {
                   <td>{item.username}</td>
                   <td>{item.email}</td>
                   <td>{item.role}</td>
-                  <td>
+                  <td className="action">
                     <button
                       className="btn btn-primary "
                       onClick={() => props.handleClickviewUser(item)}
@@ -61,7 +76,28 @@ const TableUser = (props) => {
           )}
         </tbody>
       </table>
+      <ReactPaginate
+        nextLabel="Next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={4}
+        marginPagesDisplayed={3}
+        pageCount={pageCount}
+        previousLabel="< Prev"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+        renderOnZeroPageCount={null}
+        forcePage={page-1}
+      />
     </>
   );
 };
-export default TableUser;
+export default TableUserPaginate;
