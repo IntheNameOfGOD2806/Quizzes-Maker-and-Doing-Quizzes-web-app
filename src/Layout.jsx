@@ -18,6 +18,7 @@ import DashBoard from "./components/Admin/Content/DashBoard";
 import ManageUser from "./components/Admin/Content/ManageUser";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Register from "./components/Auth/Register";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
@@ -67,6 +68,11 @@ const Layout = (props) => {
       element: <Login></Login>,
       errorElement: <ErrorPage></ErrorPage>,
     },
+    {
+        path: "/Register",
+        element: <Register></Register>,
+        errorElement: <ErrorPage></ErrorPage>,
+      },
   ]);
 
   return (

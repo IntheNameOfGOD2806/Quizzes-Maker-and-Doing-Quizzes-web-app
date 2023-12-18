@@ -1,31 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import{Provider} from  'react-redux';
-import store from '../src/redux/store';
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
-import ErrorPage from './error-page';
-import User from './components/User/User';
-import Admin from './components/Admin/Admin';
-import Contact from './routes/contact';
-import Login from './components/Auth/Login';
-import Header from './components/Header/Header';
-import Homepage from './components/Home/HomePage';
-import DashBoard from './components/Admin/Content/DashBoard';
-import ManageUser from './components/Admin/Content/ManageUser';
-import{ ToastContainer } from 'react-toastify';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import Layout from './Layout';
+import Layout from "./Layout";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
-// const router = createBrowserRouter([ 
+// const router = createBrowserRouter([
 //   {
 //     path: "/",
 //     element: <App />,
@@ -73,10 +56,8 @@ import Layout from './Layout';
 //   errorElement: <ErrorPage></ErrorPage>
 // }
 // ]);
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-<Layout/>
-);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<Layout />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

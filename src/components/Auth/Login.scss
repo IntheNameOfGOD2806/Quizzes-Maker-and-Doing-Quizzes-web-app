@@ -26,6 +26,15 @@
   }
   .content-form {
     .form-group {
+        .input-password{
+            position: relative;
+         
+            .eye{
+                position: absolute;
+                right:5px;
+                top:10px
+            }
+        }
       display: flex;
       flex-direction: column;
       row-gap: 5px;

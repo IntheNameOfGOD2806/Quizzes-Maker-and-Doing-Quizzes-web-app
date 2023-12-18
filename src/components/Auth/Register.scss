@@ -1,0 +1,67 @@
+.Register-container {
+    .header {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+      justify-content: end;
+  
+      padding: 5px 10px;
+      button {
+        background-color: transparent;
+        border: 1px solid;
+        font-size: small;
+        border-radius: 1px;
+      }
+      .contact {
+        text-decoration: underline;
+      }
+    }
+    .Register-title {
+      font-weight: 800;
+      font-size: 40px;
+      text-align: center;
+    }
+    .welcome {
+      text-align: center;
+    }
+    .content-form {
+      .form-group {
+
+        .input-password{
+            position: relative;
+         
+            .eye{
+                position: absolute;
+                right:5px;
+                top:10px
+            }
+        }
+        display: flex;
+        flex-direction: column;
+        row-gap: 5px;
+  
+        .btn-Register {
+          width: 100%;
+          border-radius: 5px;
+          margin-top: 5px;
+        }
+        .divider {
+          margin-top: 4px;
+          width: 80%;
+          height: 0.5px;
+          background-color: #ccc;
+        }
+        .forgot{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  
