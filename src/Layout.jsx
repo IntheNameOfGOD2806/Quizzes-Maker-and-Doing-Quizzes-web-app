@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
-import store from "../src/redux/store";
+import { store, persistor } from "../src/redux/store";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./error-page";
 import User from "./components/User/User";
@@ -19,6 +19,8 @@ import ManageUser from "./components/Admin/Content/ManageUser";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Register from "./components/Auth/Register";
+import { PersistGate } from "redux-persist/integration/react";
+import ListQuiz from "./components/User/listQuiz";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
@@ -40,8 +42,8 @@ const Layout = (props) => {
           errorElement: <ErrorPage></ErrorPage>,
         },
         {
-          path: "/User",
-          element: <User></User>,
+          path: "/user",
+          element: <ListQuiz></ListQuiz>,
           errorElement: <ErrorPage></ErrorPage>,
         },
       ],
@@ -69,16 +71,18 @@ const Layout = (props) => {
       errorElement: <ErrorPage></ErrorPage>,
     },
     {
-        path: "/Register",
-        element: <Register></Register>,
-        errorElement: <ErrorPage></ErrorPage>,
-      },
+      path: "/Register",
+      element: <Register></Register>,
+      errorElement: <ErrorPage></ErrorPage>,
+    },
   ]);
 
   return (
     <>
       <Provider store={store}>
-        <RouterProvider router={router}></RouterProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router}></RouterProvider>
+        </PersistGate>
       </Provider>
       <ToastContainer></ToastContainer>
     </>

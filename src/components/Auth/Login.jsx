@@ -3,50 +3,61 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { postLogin } from "../../services/apiservice";
-import{FaEye,FaEyeSlash} from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { userLoginSucces } from "../../redux/action/authAction";
+import { LiaSpinnerSolid } from "react-icons/lia";
 const Login = (props) => {
-    const navigate = useNavigate();
-    //
-    const handleLogin=async()=>{
-        let data=await postLogin(email,password);
-        if(data&&data.EC===0){
-            toast.success(data.EM, {
-                position: toast.POSITION.TOP_RIGHT,
-                className: "foo-bar",
-                autoClose: 2000,
-                draggable: true,
-              });
-              localStorage.setItem("user",JSON.stringify(data.DT));
-              navigate("/");
-             
-        }
-        if(data&&data.EC!==0){
-            toast.error(data.EM, {
-                position: toast.POSITION.TOP_RIGHT,
-                className: "foo-bar",
-                autoClose: 2000,
-                draggable: true,
-              });
-        }
-
-    }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  //
+  const handleLogin = async () => {
+    setIsLoading(true);
+    let data = await postLogin(email, password);
+    if (data && data.EC === 0) {
+      //shoot the data to redux
+      dispatch(userLoginSucces(data));
+
+      setTimeout(() => {
+        toast.success(data.EM, {
+          position: toast.POSITION.TOP_RIGHT,
+          className: "foo-bar",
+          autoClose: 2000,
+          draggable: true,
+        });
+        setIsLoading(false);
+        navigate("/");
+      },2000 );
+    }
+    if (data && data.EC !== 0) {
+      setTimeout(() => {
+        toast.error(data.EM, {
+          position: toast.POSITION.TOP_RIGHT,
+          className: "foo-bar",
+          autoClose: 2000,
+          draggable: true,
+        });
+        setIsLoading(false);
+      },2000)
+     
+    }
+  };
+
   useEffect(() => {
-    showPassword
-      ? document
-          .querySelector("input[type=password]")
-          .setAttribute("type", "text")
-      : document
-          .querySelector("input[type=text]")
-          .setAttribute("type", "password");
+    document
+      .querySelector(showPassword ? "input[type=password]" : "input[type=text]")
+      ?.setAttribute("type", showPassword ? "text" : "password");
   }, [showPassword]);
 
-  const handleGoBack = () => {
+  function handleGoBack() {
+    // Navigate to the home page
     navigate("/");
-  };
+  }
   return (
     <div className="login-container">
       <div className="header">
@@ -95,12 +106,23 @@ const Login = (props) => {
           <div>
             <span className="forgot">Forgot Password?</span>
           </div>
-          <button onClick={handleLogin} className="btn btn-dark btn-login">
-            Sign In to Quizzlet
+          <button
+            disabled={isLoading}
+            onClick={handleLogin}
+            className="btn btn-dark btn-login"
+          >
+            {isLoading && (
+              <LiaSpinnerSolid
+                className="spinner"
+                style={{ marginRight: "3px" }}
+              />
+            )}
+
+            <span>Sign In to Quizzlet</span>
           </button>
           <div className="text-center">
             <span
-              style={{ cursor: "pointer", textDecoration: "underline" }}
+              style={{ cursor: "pointer",  }}
               onClick={() => handleGoBack()}
             >
               {" "}
