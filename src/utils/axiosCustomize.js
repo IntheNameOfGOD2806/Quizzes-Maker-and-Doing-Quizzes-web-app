@@ -2,7 +2,7 @@ import axios from "axios";
 import  NProgress  from "nprogress";
 import { store } from "../redux/store";
 const instance = axios.create({
-    baseURL: 'http://localhost:8081/',
+    baseURL: 'http://192.168.1.5:8081/',
 });
 NProgress.configure({
     showSpinner: false,
