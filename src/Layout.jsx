@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
 import { store, persistor } from "../src/redux/store";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider,useParams  } from "react-router-dom";
 import ErrorPage from "./error-page";
 import User from "./components/User/User";
 import Admin from "./components/Admin/Admin";
@@ -21,10 +21,13 @@ import "react-toastify/dist/ReactToastify.css";
 import Register from "./components/Auth/Register";
 import { PersistGate } from "redux-persist/integration/react";
 import ListQuiz from "./components/User/listQuiz";
+import DetailQuiz from "./components/User/DetailQuiz";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
 const Layout = (props) => {
+
+ 
   const router = createBrowserRouter([
     {
       path: "/",
@@ -46,6 +49,7 @@ const Layout = (props) => {
           element: <ListQuiz></ListQuiz>,
           errorElement: <ErrorPage></ErrorPage>,
         },
+    
       ],
     },
     {
@@ -73,6 +77,11 @@ const Layout = (props) => {
     {
       path: "/Register",
       element: <Register></Register>,
+      errorElement: <ErrorPage></ErrorPage>,
+    },
+    {
+      path: "/quiz/:id",
+      element: <DetailQuiz></DetailQuiz>,
       errorElement: <ErrorPage></ErrorPage>,
     },
   ]);

@@ -39,7 +39,6 @@ const ManageUser = (props) => {
     if (res && res.EC === 0) {
       setListUser(res.DT.users);
       // console.log(res.DT);
-
       setPageCount(res.DT.totalPages);
     }
   };
