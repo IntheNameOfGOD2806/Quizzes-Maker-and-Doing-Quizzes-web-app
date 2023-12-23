@@ -37,7 +37,6 @@ const putUpdateUser = (id, username, role, image) => {
     );
 }
 const deleteUser = (id) => {
-
     return axios.delete(
         `api/v1/participant`, {
         data: {
@@ -51,10 +50,8 @@ const postLogin = (email, password) => {
     const data = {
         email: email,
         password: password,
-        
     }
     //
-  
     return axios.post(
         "api/v1/login",
         data
@@ -81,4 +78,12 @@ const getQquizByQuizId = (id) => {
         `api/v1/questions-by-quiz?quizId=${id}`
     );
 }
-export {getQquizByQuizId, getQuizByUser,postRegister,postCreateUser, getlistUsers, putUpdateUser, deleteUser, getlistUsersPaginate, postLogin } 
+const postSubmitQuiz = (data) => {
+    return axios.post(
+        `api/v1/quiz-submit`,
+       {
+        ...data
+       }
+    );
+}
+export {postSubmitQuiz,getQquizByQuizId, getQuizByUser,postRegister,postCreateUser, getlistUsers, putUpdateUser, deleteUser, getlistUsersPaginate, postLogin } 

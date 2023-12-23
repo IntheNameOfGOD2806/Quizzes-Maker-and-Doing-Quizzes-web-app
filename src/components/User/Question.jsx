@@ -2,14 +2,14 @@ import { useState } from "react";
 const Question = (props) => {
   const { currentQuestion, setCurrentQuestion } = props;
   const { listQuestion } = props;
-
-  const answerOptions = ["A", "B", "C"];
-
-  const handleClickCheckBox = (e) => {
-    // handle checkbox click logic here
-    console.log(e.target.checked);
+//   console.log(listQuestion,listQuestion.length);
+  const { updateIsSelectd } = props;
+  const handleClickCheckBox = (e, answerId, questionId) => {
+    updateIsSelectd(questionId, answerId);
   };
-
+  const getAnswerLabel = (index) => {
+    return String.fromCharCode(65 + index);
+  };
   return (
     <div className="quiz-content">
       <div className="question d-flex justify-content-center">
@@ -29,28 +29,34 @@ const Question = (props) => {
         )}
       </div>
       <div className="answer">
-        {answerOptions.map((option, index) => (
-          <div className="answer-select" key={index}>
+        {listQuestion[currentQuestion]?.answers.map((answer, index) => {
+            const questionId=listQuestion[currentQuestion]?.id;
+         return(
+            <div className="answer-select" key={index}>
             <div className="form-check">
               <input
+                checked={answer.isSelected}
                 className="form-check-input"
                 type="checkbox"
                 value=""
-                id="flexCheckDefault"
-                onChange={(e) => handleClickCheckBox(e)}
+                id={`flexCheckDefault${index}`}
+                onChange={(e) => handleClickCheckBox(e,answer.id,questionId)}
               />
               <label className="form-check-label" htmlFor="flexCheckDefault">
-                {`${option}. ${listQuestion[currentQuestion]?.answers[index]?.description}`}
+                {`${getAnswerLabel(index)}.${answer.description}`}
               </label>
             </div>
           </div>
-        ))}
+         )
+        })}
       </div>
       <div className="footer">
         {currentQuestion !== 0 && (
           <button
             onClick={() => {
               if (currentQuestion > 0) {
+
+
                 setCurrentQuestion(currentQuestion - 1);
               }
             }}
@@ -59,11 +65,13 @@ const Question = (props) => {
             PREV
           </button>
         )}
-
-        {currentQuestion !== listQuestion.length - 1 && (
+        {currentQuestion <= props.listQuestion.length - 2 && (
+            
           <button
             onClick={() => {
-              if (currentQuestion < listQuestion.length - 1) {
+              if (currentQuestion <= props.listQuestion.length - 2) {
+                
+
                 setCurrentQuestion(currentQuestion + 1);
               }
             }}
@@ -72,10 +80,9 @@ const Question = (props) => {
             NEXT
           </button>
         )}
-        <button className="btn btn-warning mx-3">SUBMIT</button>
+        <button onClick={()=>{props.submitAnswer()}} className="btn btn-warning mx-3">SUBMIT</button>
       </div>
     </div>
   );
 };
-
 export default Question;
