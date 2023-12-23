@@ -7,7 +7,7 @@ import "animate.css";
 function ModalResult(props) {
 
 
-  const { show, setShow } = props;
+  const { show, setShow,dataModalResult } = props;
 //   const handleDeleteUser = async () => {
 //     let data = await 
 //     // console.log(data)
@@ -41,15 +41,15 @@ function ModalResult(props) {
           <Modal.Title>Your Result</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-         <div className="">Total Score:</div>
-         <div className="">Total Questions:</div>
+         <div className="">Total Score:{dataModalResult.countCorrect}</div>
+         <div className="">Total Questions:{dataModalResult.countTotal}</div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="warning" onClick={handleClose}>
             Cancel
           </Button>
           <Button variant="danger" >
-            Confirm
+            Show Result Details
           </Button>
         </Modal.Footer>
       </Modal>

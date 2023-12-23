@@ -22,6 +22,7 @@ import Register from "./components/Auth/Register";
 import { PersistGate } from "redux-persist/integration/react";
 import ListQuiz from "./components/User/listQuiz";
 import DetailQuiz from "./components/User/DetailQuiz";
+import ManageQuiz from "./components/User/ManageQuiz";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
@@ -67,6 +68,11 @@ const Layout = (props) => {
           element: <ManageUser></ManageUser>,
           errorElement: <ErrorPage></ErrorPage>,
         },
+        {
+          path: "ManageQuiz",
+          element: <ManageQuiz></ManageQuiz>,
+          errorElement: <ErrorPage></ErrorPage>,
+        }
       ],
     },
     {

@@ -30,6 +30,7 @@ const DetailQuiz = (props) => {
     if (res && res.EC === 0) {
     //   console.log(res);
       setShowModalResult(true);
+      setDataModalResult(res.DT);
     }
   };
   const updateIsSelectd = (questionId, answerId) => {
@@ -83,6 +84,7 @@ const DetailQuiz = (props) => {
           <div className="title">
             <span>Quiz {id}:</span> <span>{location?.state?.description}</span>
           </div>
+          <hr />
           <div className="quiz-body">
             <img src="" alt="" />
           </div>
@@ -98,7 +100,7 @@ const DetailQuiz = (props) => {
           setShow={setShowModalResult}
           dataModalResult={dataModalResult}
           />
-          <div onClick={()=>{setShowModalResult(true)}} className="btn btn-danger">show modal test</div>
+          {/* <div onClick={()=>{setShowModalResult(true)}} className="btn btn-danger">show modal test</div> */}
         </div>
         <div className="right-content">count down</div>
       </div>
