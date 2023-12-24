@@ -7,7 +7,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import {
   FaTachometerAlt,
@@ -48,7 +48,16 @@ const SideBar = (props) => {
                 whiteSpace: "nowrap",
               }}
             >
-              <DiGithubBadge size={"3em"} /> Dat
+              <DiGithubBadge size={"3em"} />{" "}
+              <span
+                style={{
+                  marginLeft: "10px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                }}
+              >
+                Admin DashBoard
+              </span>
             </div>
           </SidebarHeader>
 
@@ -66,14 +75,17 @@ const SideBar = (props) => {
               <SubMenu
                 suffix={<span className="badge yellow"></span>}
                 icon={<FaGem />}
+                title={"Manage"}
               >
-                <NavLink to="ManageUser">
-                  <MenuItem> Manage Users</MenuItem>
-                </NavLink>
-                <NavLink to="ManageQuiz">
-                  <MenuItem> Manage Quizs</MenuItem>
-                </NavLink>
-                <MenuItem> Manage Questions</MenuItem>
+                <MenuItem>
+                  {" "}
+                  <Link to="ManageUser">Manage Users</Link>{" "}
+                </MenuItem>
+
+                <MenuItem>
+                  {" "}
+                  <Link to="ManageQuiz">Manage Quiz</Link>{" "}
+                </MenuItem>
               </SubMenu>
               <SubMenu
                 prefix={<span className="badge gray"></span>}

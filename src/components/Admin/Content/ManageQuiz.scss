@@ -1,0 +1,43 @@
+.manage-quiz-container {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  .title {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .add-new {
+    .border {
+      legend {
+        font-size: 13px !important;
+      }
+      padding: 15px !important;
+      border: 1px solid #dee2ec !important;
+    }
+    .quiz-image-upload{
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap:15px;
+      .form-label{
+        color: #dee2ec;
+        background-color: #0D6EFD;
+        width: fit-content;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap:10px;
+        padding: 4px 8px;
+        border:1px solid #dee2ec;
+        cursor: pointer;
+        border-radius: 5px;
+       
+      }
+      .drop-select{
+        width: 16vw;
+      }
+    }
+  }
+  
+}

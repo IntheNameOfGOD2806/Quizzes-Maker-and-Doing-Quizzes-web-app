@@ -2,7 +2,7 @@
 //override variable from react-pro-sidebar
 $sidebar-bg-color: #1d1d1d;
 $sidebar-width: 300px;
-$icon-bg-color: rgb(255, 0, 0);
+$icon-bg-color: rgb(43, 0, 255);
 // import
 @import "~react-pro-sidebar/dist/scss/styles.scss";
 
@@ -27,7 +27,6 @@ $icon-size: 35px;
     width: 100%;
     .admin-header {
       height: 40px;
-      border: 1px solid green;
     }
     .admin-main {
       button.btn {
