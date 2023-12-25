@@ -14,6 +14,7 @@ const ManageQuiz = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState({ label: "Easy", value: "Easy" });
   const [image, setImage] = useState(null);
+  const [previewimage, setPreviewimage] = useState(null);
   const [listQuiz, setListQuiz] = useState([]);
 
   const options = [
@@ -26,6 +27,7 @@ const ManageQuiz = () => {
     if (e.target && e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setImage(file);
+       setPreviewimage(URL.createObjectURL(file));
     }
   };
   const fetchQuizData = async () => {
@@ -137,7 +139,16 @@ const ManageQuiz = () => {
                 onChange={(e) => handleChangeFile(e)}
               />
             </div>
-            <div className="image-preview"></div>
+            <div className="image-preview">
+              {previewimage && (
+                <img
+                  style={{ maxHeight: "100px", maxWidth: "100px" }}
+                  src={previewimage}
+                  alt="preview"
+                />
+              )}
+               {!previewimage && <div>No Image</div>}
+            </div>
             <button
               onClick={() => handleSubmitPostQuiz()}
               style={{ marginTop: "10px" }}

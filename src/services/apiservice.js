@@ -113,8 +113,22 @@ const deleteQuizById = (id) => {
     }
     )
 }
+const putUpdateQuiz = (id, name, description, difficulty, quizImage) => {
+    //submit data
+    const form = new FormData();
+    form.append("id", id);
+    form.append("name", name);
+    form.append("description", description);
+    form.append("difficulty", difficulty);
+    form.append("quizImage", quizImage);
+    //
+    return axios.put(
+        "api/v1/quiz",
+        form
+    );
+}
 
-export {
+export {putUpdateQuiz,
     deleteQuizById, getAllQuiz, postCreateQuiz, postSubmitQuiz, getQquizByQuizId, getQuizByUser,
     postRegister, postCreateUser, getlistUsers, putUpdateUser, deleteUser,
     getlistUsersPaginate, postLogin

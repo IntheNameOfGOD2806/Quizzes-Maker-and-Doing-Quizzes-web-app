@@ -18,24 +18,14 @@ const ModalUpdateUser = (props) => {
   const [previewimage, setPreviewimage] = useState(null);
   const [role, setRole] = useState("USER");
   const [image, setImage] = useState(null);
-
   useEffect(() => {
-     console.log("useeffect")
     if (!_.isEmpty(userUpdateData)) {
-     
-      //   console.log(
-      //     "🚀 ~ file: ModalUpdateUser.jsx:18 ~ useEffect ~ userDataUpdate:",
-      //     userUpdateData
-      //   );
       setEmail(userUpdateData.email);
       setUsername(userUpdateData.username);
       userUpdateData.image && setPreviewimage(`data:image/jpeg;base64,${userUpdateData.image}`);
       setRole(userUpdateData.role);
-
-      //   console.log(role)
     }
   }, [userUpdateData]);
-
   const handleClose = () => {
     setShow(false);
     setEmail("");
@@ -59,7 +49,6 @@ const ModalUpdateUser = (props) => {
   //handle submit user
   const handleUpdateUser = async () => {
     // validate
-
     //submit data
     let data = await putUpdateUser(userUpdateData.id, username, role, image);
     if (data && data.EC === 0) {
@@ -161,7 +150,6 @@ const ModalUpdateUser = (props) => {
               <label for="inputRole" className="form-label">
                 Role
               </label>
-
               <select
                 id="inputState"
                 className="form-select"

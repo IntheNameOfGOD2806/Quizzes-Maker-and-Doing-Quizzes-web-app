@@ -4,13 +4,21 @@ import { getAllQuiz } from "../../../services/apiservice";
 import { toast } from "react-toastify";
 import './QuizTable.scss'
 import ModalDeleteQuiz from "./ModalDeleteQuiz";
+import ModalUpdateQuiz from "./ModalUpdateQuiz";
 function QuizTable(props) {
 const{listQuiz,fetchQuizData}=props;
 const [showModalDeleteQuiz, setShowModalDeleteQuiz] = useState(false);
+const [showModalUpdateQuiz, setShowModalUpdateQuiz] = useState(false);
+
 const[deleteId,setDeleteId]=useState();
+const[dataUpdateQuiz,setDataUpdateQuiz]=useState({});
 const handleClickDeleteQuiz=(id)=>{
     setDeleteId(id)
    setShowModalDeleteQuiz(true);
+}
+const handleClickUpdateQuiz=(id, name, description, difficulty, image)=>{
+    setDataUpdateQuiz({id,name,description,difficulty,image});
+    setShowModalUpdateQuiz(true);
 }
 
 //   useEffect(() => {
@@ -72,7 +80,8 @@ const handleClickDeleteQuiz=(id)=>{
                               <button className="btn btn-primary">
                                   View
                                 </button>
-                                <button className="btn btn-warning">
+                                <button className="btn btn-warning"
+                                onClick={() => handleClickUpdateQuiz(item.id, item.name, item.description, item.difficulty, item.image)}>
                                   Edit
                                 </button>
                                 <button className="btn btn-danger"
@@ -97,6 +106,12 @@ const handleClickDeleteQuiz=(id)=>{
       setShow={setShowModalDeleteQuiz}
       fetchQuizData={fetchQuizData}
     />
+    <ModalUpdateQuiz
+      show={showModalUpdateQuiz}
+      setShow={setShowModalUpdateQuiz}
+      fetchQuizData={fetchQuizData}
+      dataUpdateQuiz={dataUpdateQuiz}
+    ></ModalUpdateQuiz>
 
     </>
   );
