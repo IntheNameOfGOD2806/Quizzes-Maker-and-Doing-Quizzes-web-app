@@ -22,7 +22,7 @@ import { MdOutlineQuiz } from "react-icons/md";
 import { DiGithubBadge } from "react-icons/di";
 
 import sidebarBg from "../../assets/bg1.jpg";
-import icon from "../../logo.svg";
+
 const SideBar = (props) => {
   const { collapsed, toggled, handleToggleSidebar } = props;
   return (
