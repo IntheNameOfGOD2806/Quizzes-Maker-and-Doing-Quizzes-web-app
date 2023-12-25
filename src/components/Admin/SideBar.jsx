@@ -86,6 +86,10 @@ const SideBar = (props) => {
                   {" "}
                   <Link to="ManageQuiz">Manage Quiz</Link>{" "}
                 </MenuItem>
+                <MenuItem>
+                  {" "}
+                  <Link to="ManageQuestion">Manage Question</Link>{" "}
+                </MenuItem>
               </SubMenu>
               <SubMenu
                 prefix={<span className="badge gray"></span>}

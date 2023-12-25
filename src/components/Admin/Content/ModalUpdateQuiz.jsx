@@ -128,7 +128,7 @@ function ModalUpdateQuiz(props) {
                   onChange={(e) => handleChangeFile(e)}
                 />
                 <div
-                  style={{ maxHeight: "100px", maxWidth: "100px" }}
+                  style={{ maxHeight: "100%", maxWidth: "100%",display:"flex",justifyContent:"center",alignItems:"center" }}
                   className="image-preview"
                 >
                   {previewimage && (

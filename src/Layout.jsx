@@ -23,6 +23,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import ListQuiz from "./components/User/listQuiz";
 import DetailQuiz from "./components/User/DetailQuiz";
 import ManageQuiz from "./components/Admin/Content/ManageQuiz";
+import ManageQuestion from "./components/Admin/Content/ManageQuestion";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'react-perfect-scrollbar/dist/css/styles.css';
 // import Root from './routes/Root';
@@ -74,7 +75,12 @@ const Layout = (props) => {
           path: "ManageQuiz",
           element: <ManageQuiz></ManageQuiz>,
           errorElement: <ErrorPage></ErrorPage>,
-        }
+        },
+        {
+          path: "ManageQuestion",
+          element: <ManageQuestion></ManageQuestion>,
+          errorElement: <ErrorPage></ErrorPage>,
+        },
       ],
     },
     {
