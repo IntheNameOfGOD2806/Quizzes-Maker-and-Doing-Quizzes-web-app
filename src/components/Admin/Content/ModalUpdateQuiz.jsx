@@ -11,7 +11,7 @@ function ModalUpdateQuiz(props) {
   const { show, setShow, fetchQuizData } = props;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState({ label: "Easy", value: "Easy" });
+  const [category, setCategory] = useState({ label: "EASY", value: "EASY" });
   const [image, setImage] = useState("");
   const [previewimage, setPreviewimage] = useState(null);
   const [id, setId] = useState(null);
@@ -23,15 +23,15 @@ function ModalUpdateQuiz(props) {
   ];
   //
   useEffect(() => {
-    if(props.dataUpdateQuiz){
-   setName(props.dataUpdateQuiz.name);
-    setDescription(props.dataUpdateQuiz.description);
-    setCategory(props.dataUpdateQuiz.difficulty);
-    setImage(props.dataUpdateQuiz.image);
-    setId(props.dataUpdateQuiz.id);
-    setPreviewimage(`data:image/jpeg;base64, ${props.dataUpdateQuiz.image}`);
+    if (props.dataUpdateQuiz) {
+      setName(props.dataUpdateQuiz.name);
+      const dataType = props.dataUpdateQuiz.difficulty;
+      setDescription(props.dataUpdateQuiz.description);
+      setCategory({ label: `${dataType}`, value: `${dataType}` });
+      setImage(props.dataUpdateQuiz.image);
+      setId(props.dataUpdateQuiz.id);
+      setPreviewimage(`data:image/jpeg;base64, ${props.dataUpdateQuiz.image}`);
     }
- 
   }, [props]);
   const handleChangeFile = (e) => {
     if (e.target && e.target.files && e.target.files[0]) {
@@ -41,7 +41,7 @@ function ModalUpdateQuiz(props) {
     }
   };
   const handleClose = () => setShow(false);
-  //update
+
   const handleUpdateQuiz = async (
     id,
     name,
@@ -113,11 +113,7 @@ function ModalUpdateQuiz(props) {
                   defaultValue={category}
                   onChange={setCategory}
                 />
-                <label
-                
-                  className="form-label"
-                  htmlFor="file-upload"
-                >
+                <label className="form-label" htmlFor="file-upload">
                   <MdOutlineDriveFolderUpload
                     style={{ height: "20px", width: "20px" }}
                     className="icon"
@@ -131,15 +127,18 @@ function ModalUpdateQuiz(props) {
                   id="file-upload"
                   onChange={(e) => handleChangeFile(e)}
                 />
-                <div style={{maxHeight:"100px",maxWidth:"100px"}} className="image-preview">
-                    {previewimage && (
-                       <img
-                       style={{maxHeight:"100px",maxWidth:"100px"}}
-                         src={`${previewimage}`}
-                         alt=""
-                       />
-                    )}
-              
+                <div
+                  style={{ maxHeight: "100px", maxWidth: "100px" }}
+                  className="image-preview"
+                >
+                  {previewimage && (
+                    <img
+                      style={{ maxHeight: "100px", maxWidth: "100px" }}
+                      src={`${previewimage}`}
+                      alt=""
+                    />
+                  )}
+
                   {!previewimage && <span>Preview Image</span>}
                 </div>
               </div>
