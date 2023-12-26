@@ -1,18 +1,14 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Provider } from "react-redux";
 import { store, persistor } from "../src/redux/store";
-import { createBrowserRouter, RouterProvider,useParams  } from "react-router-dom";
+import { createBrowserRouter, RouterProvider,  } from "react-router-dom";
 import ErrorPage from "./error-page";
-import User from "./components/User/User";
 import Admin from "./components/Admin/Admin";
 import Contact from "./routes/contact";
 import Login from "./components/Auth/Login";
-import Header from "./components/Header/Header";
 import Homepage from "./components/Home/HomePage";
 import DashBoard from "./components/Admin/Content/DashBoard";
 import ManageUser from "./components/Admin/Content/ManageUser";
@@ -30,8 +26,6 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
 const Layout = (props) => {
-
- 
   const router = createBrowserRouter([
     {
       path: "/",
@@ -53,7 +47,6 @@ const Layout = (props) => {
           element: <ListQuiz></ListQuiz>,
           errorElement: <ErrorPage></ErrorPage>,
         },
-    
       ],
     },
     {
@@ -99,7 +92,6 @@ const Layout = (props) => {
       errorElement: <ErrorPage></ErrorPage>,
     },
   ]);
-
   return (
     <>
       <Provider store={store}>

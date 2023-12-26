@@ -1,10 +1,19 @@
 .manage-question-container {
+    .icon-question{
+        cursor: pointer;
+        position: relative;
+        bottom:6px;
+    }
+ .select-quiz{
+    position: relative;
+ }
   .form-label {
+    position: relative;
     z-index: 999999;
   }
   .answer-container {
     position: relative;
-    left: 10px;
+    left: 120px;
     .form-check-input {
       position: relative;
       bottom: 5px;
@@ -37,6 +46,7 @@
     }
   }
   .form-add-new-wrapper {
+    z-index: -99999;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
