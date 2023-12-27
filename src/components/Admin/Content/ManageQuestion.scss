@@ -59,7 +59,18 @@
       .question-image-upload {
         position: relative;
         bottom: 10px;
-        left: 40px;
+        .image-upload-icon{
+
+          &:hover{
+            color: orange;
+          }
+        }
+        .image-text-hover{
+          cursor: pointer;
+          &:hover{
+            color:orange;
+          }
+        }
       }
       .icon-container {
         position: relative;

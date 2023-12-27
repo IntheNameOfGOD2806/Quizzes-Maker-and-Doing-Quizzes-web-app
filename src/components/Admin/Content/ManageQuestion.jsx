@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 import _ from "lodash";
 import { toast } from "react-toastify";
+import { LuImagePlus } from "react-icons/lu";
 const ManageQuestion = (props) => {
   const options = [
     { value: "chocolate", label: "Chocolate" },
@@ -150,22 +151,38 @@ const ManageQuestion = (props) => {
     setListQuestion(cloneListQuestion);
   };
   //handle onchange
-  const handleOnChange = (type,questionId ,answerId, value) => {
+  const handleOnChange = (type, questionId, answerId, value) => {
     const cloneListQuestion = [...listQuestion];
- const targetQuestionId = questionId;
-  const targetQuestionIndex = cloneListQuestion.findIndex(
-          (question) => question.id === targetQuestionId
-        );
+    const targetQuestionId = questionId;
+    const targetAnswerId = answerId;
+    const targetQuestionIndex = cloneListQuestion.findIndex(
+      (question) => question.id === targetQuestionId
+    );
     switch (type) {
       case "QUESTION":
-       
         cloneListQuestion[targetQuestionIndex].description = value;
         setListQuestion(cloneListQuestion);
         break;
-       case "ANSWER":
-          const targetAnswerId=answerId;
-          cloneListQuestion[targetQuestionIndex].answers[ta]
-       break;
+      case "ANSWER":
+        var targetAnswerIndex = cloneListQuestion[
+          targetQuestionIndex
+        ].answers.findIndex((answer) => answer.id === targetAnswerId);
+        cloneListQuestion[targetQuestionIndex].answers[
+          targetAnswerIndex
+        ].description = value;
+        setListQuestion(cloneListQuestion);
+        break;
+      case "CHECKBOX":
+        targetAnswerIndex = cloneListQuestion[
+          targetQuestionIndex
+        ].answers.findIndex((answer) => answer.id === targetAnswerId);
+        cloneListQuestion[targetQuestionIndex].answers[
+          targetAnswerIndex
+        ].isCorrected = !cloneListQuestion[targetQuestionIndex].answers[
+          targetAnswerIndex
+        ].isCorrected;
+        setListQuestion(cloneListQuestion);
+        break;
       default:
         break;
     }
@@ -220,8 +237,29 @@ const ManageQuestion = (props) => {
                 </div>
                 <div className="icon-wrapper">
                   <div className="question-image-upload">
-                    {/* <label htmlFor="">Upload Image:</label> */}
-                    <input type="file" name="" id="" className="form-control" />
+                    <label htmlFor="image-upload">
+                      <LuImagePlus
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          color: "cyan",
+                          cursor: "pointer",
+                        }}
+                        className="image-upload-icon"
+                      ></LuImagePlus>
+                    </label>
+                    {!_.isEmpty(question.imageName) && (
+                      <span className="image-text-hover">
+                        {question.imageName}
+                      </span>
+                    )}
+                    <input
+                      style={{ display: "none" }}
+                      type="file"
+                      name=""
+                      id="image-upload"
+                      className=""
+                    />
                   </div>
                   <span
                     className="icon-container"
@@ -250,10 +288,14 @@ const ManageQuestion = (props) => {
                     <div className="answer-container">
                       <div className="answer-add-new-wrapper ">
                         <input
+                          checked={answer.isCorrected}
                           style={{ marginRight: "10px" }}
                           class="form-check-input"
                           type="checkbox"
                           id="flexCheckDefault"
+                          onChange={() =>
+                            handleOnChange("CHECKBOX", question.id, answer.id)
+                          }
                         />
                         <div class="form-floating mb-3 col-4 ">
                           <input
@@ -261,7 +303,14 @@ const ManageQuestion = (props) => {
                             class="form-control "
                             id="floatingInput"
                             value={answer.description}
-                            onChange={(e)=>handleOnChange("ANSWER",question.id,answer.id,e.target.value)}
+                            onChange={(e) =>
+                              handleOnChange(
+                                "ANSWER",
+                                question.id,
+                                answer.id,
+                                e.target.value
+                              )
+                            }
                           />
                           <label style={{ color: "#ccc" }} for="floatingInput">
                             Answer {index}
