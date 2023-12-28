@@ -66,6 +66,7 @@
           }
         }
         .image-text-hover{
+          margin-left: 5px;
           cursor: pointer;
           &:hover{
             color:orange;
@@ -77,9 +78,11 @@
         bottom: 10px;
 
         .icon {
+          
           cursor: pointer;
           &:hover {
             opacity: 0.7;
+            animation: pulse 1s infinite;
           }
         }
       }

@@ -104,6 +104,9 @@ const getAllQuiz = () => {
         `api/v1/quiz/all`
     );
 }
+const getQuizWithQA = (quizId) => {
+    return axios.get(`api/v1/quiz-with-qa/${quizId}`)
+}
 const deleteQuizById = (id) => {
     return axios.delete(
         `api/v1/quiz/${id}`, {
@@ -127,8 +130,23 @@ const putUpdateQuiz = (id, name, description, difficulty, quizImage) => {
         form
     );
 }
+const postCreateNewQuestionForQuiz = (quiz_id, description, questionImage) => {
+    const form = new FormData();
+    form.append("quiz_id", quiz_id);
+    form.append("description", description);
+    form.append("questionImage", questionImage);
+    return axios.post("api/v1/question",
+        form
+    )
+}
+const postCreateNewAnswerForQuestion = (question_id, description, correct_answer) => {
 
-export {putUpdateQuiz,
+    return axios.post("api/v1/answer",
+        { description, correct_answer, question_id }
+    )
+}
+export {
+    putUpdateQuiz, getQuizWithQA, postCreateNewQuestionForQuiz, postCreateNewAnswerForQuestion,
     deleteQuizById, getAllQuiz, postCreateQuiz, postSubmitQuiz, getQquizByQuizId, getQuizByUser,
     postRegister, postCreateUser, getlistUsers, putUpdateUser, deleteUser,
     getlistUsersPaginate, postLogin

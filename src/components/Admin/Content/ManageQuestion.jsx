@@ -1,80 +1,72 @@
-import Select from "react-select";
-import { useState } from "react";
-import "./ManageQuestion.scss";
-import { FcPlus } from "react-icons/fc";
-import { FaTrash } from "react-icons/fa";
-import { PiPlusSquareThin } from "react-icons/pi";
-import { HiOutlineMinusCircle } from "react-icons/hi2";
-import { v4 as uuidv4 } from "uuid";
-import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
+import FsLightbox from "fslightbox-react";
 import _ from "lodash";
-import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import { FcPlus } from "react-icons/fc";
+import {
+  HiOutlineMinusCircle,
+  HiOutlineQuestionMarkCircle,
+} from "react-icons/hi2";
 import { LuImagePlus } from "react-icons/lu";
+import { PiPlusSquareThin } from "react-icons/pi";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import {
+  getAllQuiz,
+  getQuizWithQA,
+  postCreateNewAnswerForQuestion,
+  postCreateNewQuestionForQuiz,
+} from "../../../services/apiservice";
+import "./ManageQuestion.scss";
+
 const ManageQuestion = (props) => {
-  const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
-  ];
-  const [listQuestion, setListQuestion] = useState([
-    {
-      id: uuidv4(),
-      description: "Question 1: What is the capital of France?",
-      imageFile: "image1.jpg",
-      imageName: "Paris",
-      answers: [
-        {
-          id: uuidv4(),
-          description: "Paris",
-          isCorrected: true,
-        },
-        {
-          id: uuidv4(),
-          description: "London",
-          isCorrected: false,
-        },
-        {
-          id: uuidv4(),
-          description: "Berlin",
-          isCorrected: false,
-        },
-        {
-          id: uuidv4(),
-          description: "Madrid",
-          isCorrected: false,
-        },
-      ],
-    },
-    {
-      id: uuidv4(),
-      description: "Question 2: Who wrote 'Romeo and Juliet'?",
-      imageFile: "image2.jpg",
-      imageName: "Shakespeare",
-      answers: [
-        {
-          id: uuidv4(),
-          description: "Shakespeare",
-          isCorrected: true,
-        },
-        {
-          id: uuidv4(),
-          description: "Hemingway",
-          isCorrected: false,
-        },
-        {
-          id: uuidv4(),
-          description: "Tolstoy",
-          isCorrected: false,
-        },
-        {
-          id: uuidv4(),
-          description: "Dickens",
-          isCorrected: false,
-        },
-      ],
-    },
-  ]);
+  const [previewImage, setPreviewImage] = useState({});
+  const [toggler, setToggler] = useState(false);
+
+  const [listQuestion, setListQuestion] = useState([]);
+  const [listQuiz, setListQuiz] = useState([]);
+
+  const options =
+    listQuiz &&
+    listQuiz.map((quiz) => {
+      return {
+        value: quiz.id,
+        label: `${quiz.id}-${quiz.name}`,
+      };
+    });
   const [selectedQuiz, setSelectedQuiz] = useState("");
+  const fetchQuizData = async () => {
+    let res = await getAllQuiz();
+    if (res && res.EC === 0) {
+      setListQuiz(res.DT);
+      // console.log(listQuiz);
+    }
+    if (res && res.EC !== 0) {
+      toast.error(res.EM, {
+        position: toast.POSITION.TOP_RIGHT,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
+    }
+  };
+  const fetchQuizWithQA = async (quizId) => {
+    let res = await getQuizWithQA(quizId);
+    if (res && res.EC === 0) {
+      setListQuestion(res.DT.qa);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuizData();
+  }, []);
+
+  useEffect(() => {
+    // fetchQuizWithQA(selectedQuiz.value);
+    setListQuestion([]);
+    setPreviewImage({});
+  }, [selectedQuiz]);
   //handle add new question
   const handleAddNewQuestion = () => {
     setListQuestion([
@@ -84,18 +76,7 @@ const ManageQuestion = (props) => {
         description: "",
         imageFile: "",
         imageName: "",
-        answers: [
-          {
-            id: uuidv4(),
-            description: "answer 1",
-            isCorrected: false,
-          },
-          {
-            id: uuidv4(),
-            description: "answer 2",
-            isCorrected: false,
-          },
-        ],
+        answers: [],
       },
     ]);
   };
@@ -126,7 +107,7 @@ const ManageQuestion = (props) => {
     newListQuestion[index].answers.push({
       id: uuidv4(),
       description: "",
-      isCorrected: false,
+      isCorrect: false,
     });
     setListQuestion(newListQuestion);
   };
@@ -161,6 +142,7 @@ const ManageQuestion = (props) => {
     switch (type) {
       case "QUESTION":
         cloneListQuestion[targetQuestionIndex].description = value;
+
         setListQuestion(cloneListQuestion);
         break;
       case "ANSWER":
@@ -178,15 +160,67 @@ const ManageQuestion = (props) => {
         ].answers.findIndex((answer) => answer.id === targetAnswerId);
         cloneListQuestion[targetQuestionIndex].answers[
           targetAnswerIndex
-        ].isCorrected = !cloneListQuestion[targetQuestionIndex].answers[
+        ].isCorrect = !cloneListQuestion[targetQuestionIndex].answers[
           targetAnswerIndex
-        ].isCorrected;
+        ].isCorrect;
         setListQuestion(cloneListQuestion);
         break;
       default:
         break;
     }
   };
+  const handleOnchangeFile = (e, questionId) => {
+    if (e.target && e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const cloneListQuestion = [...listQuestion];
+      const index = cloneListQuestion.findIndex((q) => q.id === questionId);
+      cloneListQuestion[index].imageFile = file;
+      cloneListQuestion[index].imageName = file.name;
+      setPreviewImage({
+        imageFile: URL.createObjectURL(file),
+        imageName: file.name,
+      });
+    }
+  };
+  const handleAddQA = async () => {
+    //submit question:
+
+    await Promise.all(
+      listQuestion.map(async (question) => {
+        const q = await postCreateNewQuestionForQuiz(
+          selectedQuiz.value,
+          question.description,
+          question.imageFile
+        );
+        if (q.EC !== 0) {
+          toast.error(q.EM);
+         
+        } else if (q.EC === 0) {
+          toast.success(q.EM);
+           setListQuestion([]);
+        }
+        //submit answer(s)
+         await Promise.all(
+          question.answers.map(async (answer) => {
+            let a = await postCreateNewAnswerForQuestion(
+              +q.DT.id,
+              answer.description,
+              answer.isCorrect
+            );
+            if (a.EC !== 0) {
+              toast.error(a.EM);
+              return;
+            } else if (a.EC === 0) {
+              toast.success(a.EM,{theme:"dark"});
+            }
+          })
+        );
+
+         // console.log(q)
+      })
+    );
+  };
+
   return (
     <div className="manage-question-container">
       <div className="title">Manage Question</div>
@@ -202,11 +236,25 @@ const ManageQuestion = (props) => {
       <div style={{ marginTop: "30px" }}>
         <span>Add question:</span>
       </div>
+      {selectedQuiz && listQuestion.length === 0 && (
+        <div>
+          <button
+            onClick={() => handleAddNewQuestion()}
+            className="btn btn-primary"
+          >
+            Create a question{" "}
+          </button>
+        </div>
+      )}
+      {!selectedQuiz &&
+      <span style={{color:"orange"}}>*please select quiz</span>
+
+      }
       {listQuestion &&
         listQuestion.length > 0 &&
         listQuestion.map((question, index) => {
           return (
-            <div style={{ marginTop: "20px" }} key={question.id}>
+            <div style={{ marginTop: "20px" }} key={`question-${index}`}>
               <div className="form-add-new-wrapper col-6">
                 <HiOutlineQuestionMarkCircle
                   className="icon-question"
@@ -227,6 +275,7 @@ const ManageQuestion = (props) => {
                       return handleOnChange(
                         "QUESTION",
                         question.id,
+                        0,
                         e.target.value
                       );
                     }}
@@ -248,17 +297,30 @@ const ManageQuestion = (props) => {
                         className="image-upload-icon"
                       ></LuImagePlus>
                     </label>
-                    {!_.isEmpty(question.imageName) && (
-                      <span className="image-text-hover">
-                        {question.imageName}
-                      </span>
+                    {previewImage && (
+                      <>
+                        <span
+                          onClick={() => setToggler(!toggler)}
+                          className="image-text-hover"
+                        >
+                          {previewImage.imageName && (
+                            <span>Click to view Image</span>
+                          )}
+                        </span>
+                        <FsLightbox
+                          toggler={toggler}
+                          sources={[`${previewImage.imageFile}`]}
+                        />
+                      </>
                     )}
+                    {_.isEmpty(previewImage) && <span>0 file is uploaded</span>}
                     <input
                       style={{ display: "none" }}
                       type="file"
                       name=""
                       id="image-upload"
                       className=""
+                      onChange={(e) => handleOnchangeFile(e, question.id)}
                     />
                   </div>
                   <span
@@ -282,13 +344,24 @@ const ManageQuestion = (props) => {
                   </span>
                 </div>
               </div>
+              {question && question.answers.length === 0 && (
+                <div>
+                  <button
+                    style={{ marginLeft: "270px" }}
+                    onClick={() => handleAddAnswer(question.id)}
+                    className="btn btn-primary"
+                  >
+                    Add an answer
+                  </button>
+                </div>
+              )}
               {question &&
                 question.answers.map((answer, index) => {
                   return (
                     <div className="answer-container">
                       <div className="answer-add-new-wrapper ">
                         <input
-                          checked={answer.isCorrected}
+                          checked={answer.isCorrect}
                           style={{ marginRight: "10px" }}
                           class="form-check-input"
                           type="checkbox"
@@ -356,6 +429,18 @@ const ManageQuestion = (props) => {
             </div>
           );
         })}
+      <hr />
+      {listQuestion.length !== 0 && (
+        <div className="submit-button">
+          <button
+            onClick={() => handleAddQA()}
+            style={{ marginLeft: "640px" }}
+            className="btn btn-warning"
+          >
+            SAVE
+          </button>
+        </div>
+      )}
     </div>
   );
 };
