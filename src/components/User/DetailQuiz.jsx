@@ -10,7 +10,7 @@ const DetailQuiz = (props) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [listQuestion, setListQuestion] = useState([]);
   const [showModalResult, setShowModalResult] = useState(false);
-  const[dataModalResult, setDataModalResult] = useState({});
+  const [dataModalResult, setDataModalResult] = useState({});
   //   console.log(listQuestion);
   const location = useLocation();
   const submitAnswer = async () => {
@@ -28,7 +28,7 @@ const DetailQuiz = (props) => {
     // console.log(JSON.stringify(dataSubmit));
     let res = await postSubmitQuiz(dataSubmit);
     if (res && res.EC === 0) {
-    //   console.log(res);
+      //   console.log(res);
       setShowModalResult(true);
       setDataModalResult(res.DT);
     }
@@ -37,9 +37,9 @@ const DetailQuiz = (props) => {
     const selectedQuestion = [...listQuestion].find((question) => {
       return question.id === questionId;
     });
-  const toChangeQuestion =selectedQuestion.answers.find((answer) => {
+    const toChangeQuestion = selectedQuestion.answers.find((answer) => {
       return answer.id === answerId;
-    })
+    });
     toChangeQuestion.isSelected = !toChangeQuestion.isSelected;
     const cloneListQuestion = _.cloneDeep(listQuestion);
     var index = cloneListQuestion.findIndex((x) => x.id === questionId);
@@ -61,6 +61,7 @@ const DetailQuiz = (props) => {
         .map((value, key) => {
           const answers_array = [];
           value.forEach((item) => {
+            //flag 
             item.answers.isSelected = false;
             answers_array.push(item.answers);
           });
@@ -96,9 +97,9 @@ const DetailQuiz = (props) => {
             submitAnswer={submitAnswer}
           />
           <ModalResult
-          show={showModalResult}
-          setShow={setShowModalResult}
-          dataModalResult={dataModalResult}
+            show={showModalResult}
+            setShow={setShowModalResult}
+            dataModalResult={dataModalResult}
           />
           {/* <div onClick={()=>{setShowModalResult(true)}} className="btn btn-danger">show modal test</div> */}
         </div>

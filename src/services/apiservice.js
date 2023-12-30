@@ -145,7 +145,11 @@ const postCreateNewAnswerForQuestion = (question_id, description, correct_answer
         { description, correct_answer, question_id }
     )
 }
-export {
+const assignQuizToUser=(quizId,userId)=>{
+  return axios.post(`api/v1/quiz-assign-to-user`
+  ,{quizId,userId})
+}
+export {assignQuizToUser,
     putUpdateQuiz, getQuizWithQA, postCreateNewQuestionForQuiz, postCreateNewAnswerForQuestion,
     deleteQuizById, getAllQuiz, postCreateQuiz, postSubmitQuiz, getQquizByQuizId, getQuizByUser,
     postRegister, postCreateUser, getlistUsers, putUpdateUser, deleteUser,

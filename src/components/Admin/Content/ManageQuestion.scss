@@ -1,15 +1,14 @@
 .manage-question-container {
-    .icon-question{
-        cursor: pointer;
-        position: relative;
-        bottom:6px;
-    }
- .select-quiz{
+  .icon-question {
+    cursor: pointer;
     position: relative;
- }
+    bottom: 6px;
+  }
+  .select-quiz {
+    position: relative;
+  }
   .form-label {
     position: relative;
-    z-index: 999999;
   }
   .answer-container {
     position: relative;
@@ -36,17 +35,12 @@
     }
   }
   padding: 15px;
-  .title {
-    margin-bottom: 15px;
-    font-size: 20px;
-    font-weight: 600;
-  }
+
   .manage-question-add-new {
     .form-label {
     }
   }
   .form-add-new-wrapper {
-    z-index: -99999;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -59,17 +53,21 @@
       .question-image-upload {
         position: relative;
         bottom: 10px;
-        .image-upload-icon{
-
-          &:hover{
-            color: orange;
+        .image-upload {
+          .image-upload-icon {
+            &:hover {
+              color: orange;
+            }
           }
         }
-        .image-text-hover{
+        .image-text-hover {
           margin-left: 5px;
           cursor: pointer;
-          &:hover{
-            color:orange;
+          &:hover {
+            color: orange;
+          }
+          .image-preview-span {
+            text-decoration: underline;
           }
         }
       }
@@ -78,7 +76,6 @@
         bottom: 10px;
 
         .icon {
-          
           cursor: pointer;
           &:hover {
             opacity: 0.7;
@@ -88,4 +85,22 @@
       }
     }
   }
+  #icon-up {
+    &:hover {
+      opacity: 0.7;
+      animation: pulse 1s infinite;
+    }
+  }
+}
+.title1 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+.assign-quiz-container {
+  width: 80%;
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
 }

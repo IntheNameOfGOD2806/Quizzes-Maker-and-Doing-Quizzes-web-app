@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { getQuizByUser } from "../../services/apiservice";
 import "./listQuiz.scss";
 import { useNavigate } from "react-router-dom";
-
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const ListQuiz = (props) => {
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ const ListQuiz = (props) => {
   }, []);
   return (
     <>
-      <div className="listQuiz-container container-fluid d-flex flex-row gap-5 p-5">
+      <PerfectScrollbar>
+         <div className="listQuiz-container container-fluid d-flex flex-row gap-5 p-5">
         {listQuiz &&
           listQuiz.map((item, index) => {
             return (
@@ -38,7 +40,8 @@ const ListQuiz = (props) => {
                 <div className="card-body">
                   <h5 className="card-title">Quiz {index + 1}</h5>
                   <p className="card-text">{item.description}</p>
-                  <a
+                  <span
+                  
                     onClick={() =>
                       navigate(`/quiz/${item.id}`, {
                         state: { description: item.description },
@@ -47,7 +50,7 @@ const ListQuiz = (props) => {
                     className="btn btn-primary"
                   >
                     Doing Quizz!!
-                  </a>
+                  </span>
                 </div>
               </div>
             );
@@ -56,6 +59,8 @@ const ListQuiz = (props) => {
           <div style={{ textAlign: "center", color: "red" }}>No Quiz</div>
         )}
       </div>
+      </PerfectScrollbar>
+     
     </>
   );
 };
