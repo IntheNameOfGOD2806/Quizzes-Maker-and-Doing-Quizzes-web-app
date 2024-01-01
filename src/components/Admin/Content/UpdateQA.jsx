@@ -15,6 +15,8 @@ import { v4 as uuidv4 } from "uuid";
 import {
   getAllQuiz,
   getQuizWithQA,
+  postCreateNewAnswerForQuestion,
+  postCreateNewQuestionForQuiz,
   postUpSertQA,
 } from "../../../services/apiservice";
 import "./ManageQuestion.scss";
@@ -63,20 +65,20 @@ const UpdateQA = (props) => {
       .then((res) => res.arrayBuffer())
       .then((buf) => new File([buf], filename, { type: mimeType }));
   }
-
   const fetchQuizWithQA = async (quizId) => {
     let res = await getQuizWithQA(quizId);
     const raw_qa_data = res.DT.qa;
     if (res && res.EC === 0) {
       for (let i = 0; i < raw_qa_data.length; i++) {
         raw_qa_data[i].isShow = false;
-        if (raw_qa_data[i].imageFile) {
-          raw_qa_data[i].imageFile = await urltoFile(
-            `data:image/png;base64,${raw_qa_data[i].imageFile}`,
-            `question-${raw_qa_data[i].id}.png`,
-            "image/png"
-          );
-        }
+        // if (raw_qa_data[i].imageFile) {
+        //   raw_qa_data[i].imageFile = await urltoFile(
+        //     `data:image/png;base64,${raw_qa_data[i].imageFile}`,
+        //     `question-${raw_qa_data[i].id}.png`,
+        //     "image/png"
+        //   );
+        //   console.log(URL.createObjectURL(raw_qa_data[i].imageFile));
+        // }
       }
       console.log(raw_qa_data);
       setListQuestion(raw_qa_data);
@@ -88,7 +90,7 @@ const UpdateQA = (props) => {
   useEffect(() => {
     fetchQuizWithQA(selectedQuiz.value);
   }, [selectedQuiz]);
-  const handleAddNewQuestion = () => {
+  const handleAddNewQuestion = async () => {
     setListQuestion([
       ...listQuestion,
       {
@@ -193,29 +195,23 @@ const UpdateQA = (props) => {
     }
   };
   const handleOnchangeFile = (e, questionId, index) => {
-    const clonePreviewImage = [...previewImage];
     console.log(questionId);
     if (e.target && e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      console.log(URL.createObjectURL(file));
       const cloneListQuestion = [...listQuestion];
       const Qindex = cloneListQuestion.findIndex((q) => q.id === questionId);
       cloneListQuestion[Qindex].imageFile = file;
+      console.log(URL.createObjectURL(file));
       cloneListQuestion[Qindex].imageName = file.name;
-      const item = {
-        imageFile: URL.createObjectURL(file),
-        imageName: file.name,
-        isShow: false,
-        id: index,
-      };
-      clonePreviewImage.push(item);
-      setPreviewImage(clonePreviewImage);
+      setListQuestion(cloneListQuestion);
     }
   };
-  const getImageIndexByImageID = (questionId) => {
-    const clonePreviewImage = [...previewImage];
-    const index = clonePreviewImage.findIndex((img) => img.id === questionId);
-    return index;
-  };
+  // const getImageIndexByImageID = (questionId) => {
+  //   const clonePreviewImage = [...previewImage];
+  //   const index = clonePreviewImage.findIndex((img) => img.id === questionId);
+  //   return index;
+  // };
   const handleShowImagePreview = (questionId) => {
     const cloneListQuestion = [...listQuestion];
     const index = cloneListQuestion.findIndex((q) => q.id === questionId);
@@ -286,20 +282,53 @@ const UpdateQA = (props) => {
     });
     //call api
     if (checkValidate) {
+      console.log("check list", listQuestion);
+      //add new question and answer avoiding uuid() bug
+      for (const question of listQuestion) {
+        // console.log(typeof(question.id))
+        if (typeof question.id !== "number") {
+          var q = await postCreateNewQuestionForQuiz(
+            selectedQuiz.value,
+            question.description,
+            question.imageFile
+          );
+          if (q.EC !== 0) {
+            toast.error(q.EM);
+          } else if (q.EC === 0) {
+            toast.success(q.EM);
+          }
+          console.log("checck q:", q);
+        }
+        //submit answer
+        for (const answer of question.answers) {
+          if (typeof answer.id !== "number") {
+            const a = await postCreateNewAnswerForQuestion(
+              typeof question.id !== "number" ? q.DT.id : question.id,
+              answer.description,
+              answer.isCorrect
+            );
+            if (a.EC !== 0) {
+              toast.error(a.EM, { theme: "dark" });
+              return;
+            } else if (a.EC === 0) {
+              toast.success(a.EM, { theme: "dark" });
+            }
+          }
+        }
+      }
       const cloneListQuestion = [...listQuestion];
       const data = {
         quizId: selectedQuiz.value,
         questions: await Promise.all(
           cloneListQuestion.map(async (question) => {
-            const base64TextFile = question.imageFile
+            const base64TextFile = question?.imageFile
               ? await toBase64(question.imageFile)
               : "";
+            console.log(base64TextFile);
             return {
               id: question.id,
               description: question.description,
-              imageFile: question.imageFile
-                ? `data:image/png;base64,${base64TextFile}`
-                : "",
+              imageFile: question.imageFile ? `${base64TextFile}` : "",
               imageName: question.imageName,
               answers: question.answers.map((answer) => {
                 return {
@@ -312,34 +341,7 @@ const UpdateQA = (props) => {
           })
         ),
       };
-      //  const data = cloneListQuestion.map(async (question) => {
-      //       const base64TextFile = question.imageFile
-      //         ? await toBase64(question.imageFile)
-      //         : "";
-
-      //       return {
-      //         quizId: selectedQuiz.value,
-      //         questions: [
-      //           {
-      //             id: question.id,
-      //             description: question.description,
-      //             imageFile: question.imageFile
-      //               ? `data:image/png;base64,${base64TextFile}`
-      //               : "",
-      //             imageName: question.imageName,
-      //             answers: question.answers.map((answer) => {
-      //               return {
-      //                 id: answer.id,
-      //                 description: answer.description,
-      //                 isCorrect: answer.isCorrect,
-      //               };
-      //             }),
-      //           },
-      //         ],
-      //       };
-      //     });
- console.log(data);
-     
+      console.log(data);
       let res = await postUpSertQA(data);
       if (res && res.EC === 0) {
         console.log(res);
@@ -434,7 +436,9 @@ const UpdateQA = (props) => {
                       {question.imageFile && (
                         <>
                           <span
-                            onClick={() => handleShowImagePreview(question.id)}
+                            onClick={() => {
+                              return handleShowImagePreview(question.id);
+                            }}
                             className="image-text-hover"
                           >
                             <span className="image-preview-span">
@@ -444,14 +448,21 @@ const UpdateQA = (props) => {
                           <FsLightbox
                             toggler={question.isShow}
                             sources={[
-                              `${URL.createObjectURL(question.imageFile)}`,
+                              `
+                              data:image/png;base64,${question.imageFile}`,
                             ]}
                           />
+                          {/* <a
+                            data-fslightbox
+                            href="data:image/jpeg;base64,[.....]"
+                          >
+                            <img src="data:image/jpeg;base64,[.....]" />
+                          </a> */}
+                          {/* <span>{URL.createObjectURL(question.imageFile)}</span>
+                         <img src={URL.createObjectURL(question.imageFile)} alt="" /> */}
                         </>
                       )}
-                      {_.isEmpty(
-                        previewImage[getImageIndexByImageID(Qindex)]
-                      ) && <span>0 file is uploaded</span>}
+                      {!question.imageFile && <span>0 file is uploaded</span>}
                       <input
                         style={{ display: "none" }}
                         type="file"
@@ -596,5 +607,4 @@ const UpdateQA = (props) => {
     </>
   );
 };
-
 export default UpdateQA;
