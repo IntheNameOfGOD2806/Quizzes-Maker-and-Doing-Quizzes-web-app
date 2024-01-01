@@ -15,8 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   getAllQuiz,
   getQuizWithQA,
-  postCreateNewAnswerForQuestion,
-  postCreateNewQuestionForQuiz,
+  postUpSertQA,
 } from "../../../services/apiservice";
 import "./ManageQuestion.scss";
 const UpdateQA = (props) => {
@@ -47,25 +46,23 @@ const UpdateQA = (props) => {
       });
     }
   };
-  async function urltoFile(url, filename, mimeType) {
+  function urltoFile(url, filename, mimeType) {
     if (url.startsWith("data:")) {
-      const arr = url.split(",");
-      const mime = arr[0].match(/:(.*?);/)[1];
-      const bstr = atob(arr[arr.length - 1]);
-      const n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      for (let i = 0; i < n; i++) {
-        u8arr[i] = bstr.charCodeAt(i);
+      var arr = url.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[arr.length - 1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
       }
-      const file = new File([u8arr], filename, { type: mime || mimeType });
-      return file;
+      var file = new File([u8arr], filename, { type: mime || mimeType });
+      return Promise.resolve(file);
     }
-    const res = await fetch(url);
-    const buf = await res.arrayBuffer();
-    return new File([buf], filename, { type: mimeType });
+    return fetch(url)
+      .then((res) => res.arrayBuffer())
+      .then((buf) => new File([buf], filename, { type: mimeType }));
   }
-
-  //Usage example:
 
   const fetchQuizWithQA = async (quizId) => {
     let res = await getQuizWithQA(quizId);
@@ -91,7 +88,6 @@ const UpdateQA = (props) => {
   useEffect(() => {
     fetchQuizWithQA(selectedQuiz.value);
   }, [selectedQuiz]);
-
   const handleAddNewQuestion = () => {
     setListQuestion([
       ...listQuestion,
@@ -121,7 +117,7 @@ const UpdateQA = (props) => {
     const newListQuestion = listQuestion.filter((question) => {
       return question.id !== id;
     });
-    console.log(newListQuestion);
+    // console.log(newListQuestion);
     setListQuestion(newListQuestion);
   };
   const handleAddAnswer = (questionId) => {
@@ -184,6 +180,7 @@ const UpdateQA = (props) => {
         targetAnswerIndex = cloneListQuestion[
           targetQuestionIndex
         ].answers.findIndex((answer) => answer.id === targetAnswerId);
+        //
         cloneListQuestion[targetQuestionIndex].answers[
           targetAnswerIndex
         ].isCorrect = !cloneListQuestion[targetQuestionIndex].answers[
@@ -211,7 +208,6 @@ const UpdateQA = (props) => {
         id: index,
       };
       clonePreviewImage.push(item);
-
       setPreviewImage(clonePreviewImage);
     }
   };
@@ -226,9 +222,9 @@ const UpdateQA = (props) => {
     if (cloneListQuestion[index].imageFile) {
       cloneListQuestion[index].isShow = !cloneListQuestion[index].isShow;
     }
+    setListQuestion(cloneListQuestion);
   };
-  const handleAddQA = async () => {
-    //submit question:
+  const handleUpdateQA = async () => {
     // await Promise.all(
     //   listQuestion.map(async (question) => {
     //     const q = await postCreateNewQuestionForQuiz(
@@ -262,52 +258,105 @@ const UpdateQA = (props) => {
     //   })
     // );
     //validate data
-    const checkValidate = listQuestion.forEach((question, index) => {
+    let checkValidate = false;
+    listQuestion.forEach((question, index) => {
+      if (_.isEmpty(question.answers)) {
+        toast.warning(`question ${index} not have any answer`);
+        checkValidate = false;
+        return;
+      }
       if (_.isEmpty(question.description)) {
         toast.warn(`question ${index} description is empty`, {
           transition: Slide,
         });
+      } else {
+        checkValidate = true;
       }
       for (const answerIndex in question.answers) {
         if (_.isEmpty(question.answers[answerIndex].description)) {
           toast.warn(
             `answer ${answerIndex} of question ${index}  cannot be empty`
           );
+          checkValidate = false;
+        } else {
+          checkValidate = true;
         }
       }
-      return true;
+      console.log(checkValidate);
     });
     //call api
     if (checkValidate) {
-      for (const question of listQuestion) {
-        const q = await postCreateNewQuestionForQuiz(
-          selectedQuiz.value,
-          question.description,
-          question.imageFile
-        );
-        if (q.EC !== 0) {
-          toast.error(q.EM);
-        } else if (q.EC === 0) {
-          toast.success(q.EM);
-          setListQuestion([]);
-        }
-        //submit answer
-        for (const answer of question.answers) {
-          const a = await postCreateNewAnswerForQuestion(
-            +q.DT.id,
-            answer.description,
-            answer.isCorrect
-          );
-          if (a.EC !== 0) {
-            toast.error(a.EM);
-            return;
-          } else if (a.EC === 0) {
-            toast.success(a.EM, { theme: "dark" });
-          }
-        }
+      const cloneListQuestion = [...listQuestion];
+      const data = {
+        quizId: selectedQuiz.value,
+        questions: await Promise.all(
+          cloneListQuestion.map(async (question) => {
+            const base64TextFile = question.imageFile
+              ? await toBase64(question.imageFile)
+              : "";
+            return {
+              id: question.id,
+              description: question.description,
+              imageFile: question.imageFile
+                ? `data:image/png;base64,${base64TextFile}`
+                : "",
+              imageName: question.imageName,
+              answers: question.answers.map((answer) => {
+                return {
+                  id: answer.id,
+                  description: answer.description,
+                  isCorrect: answer.isCorrect,
+                };
+              }),
+            };
+          })
+        ),
+      };
+      //  const data = cloneListQuestion.map(async (question) => {
+      //       const base64TextFile = question.imageFile
+      //         ? await toBase64(question.imageFile)
+      //         : "";
+
+      //       return {
+      //         quizId: selectedQuiz.value,
+      //         questions: [
+      //           {
+      //             id: question.id,
+      //             description: question.description,
+      //             imageFile: question.imageFile
+      //               ? `data:image/png;base64,${base64TextFile}`
+      //               : "",
+      //             imageName: question.imageName,
+      //             answers: question.answers.map((answer) => {
+      //               return {
+      //                 id: answer.id,
+      //                 description: answer.description,
+      //                 isCorrect: answer.isCorrect,
+      //               };
+      //             }),
+      //           },
+      //         ],
+      //       };
+      //     });
+ console.log(data);
+     
+      let res = await postUpSertQA(data);
+      if (res && res.EC === 0) {
+        console.log(res);
+        toast.success(res.EM);
+      }
+      if (res && res.EC !== 0) {
+        toast.error(res.EM);
       }
     }
   };
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
   return (
     <>
       <div className="manage-question-container">
@@ -385,19 +434,13 @@ const UpdateQA = (props) => {
                       {question.imageFile && (
                         <>
                           <span
-                            onClick={() =>
-                              handleShowImagePreview(
-                                question.id,
-                                
-                              )
-                            }
+                            onClick={() => handleShowImagePreview(question.id)}
                             className="image-text-hover"
                           >
                             <span className="image-preview-span">
                               view image
                             </span>
                           </span>
-
                           <FsLightbox
                             toggler={question.isShow}
                             sources={[
@@ -541,7 +584,7 @@ const UpdateQA = (props) => {
         {listQuestion.length !== 0 && (
           <div className="submit-button">
             <button
-              onClick={() => handleAddQA()}
+              onClick={() => handleUpdateQA()}
               style={{ marginLeft: "640px" }}
               className="btn btn-warning"
             >
@@ -553,4 +596,5 @@ const UpdateQA = (props) => {
     </>
   );
 };
+
 export default UpdateQA;
