@@ -20,6 +20,10 @@ import {
   postUpSertQA,
 } from "../../../services/apiservice";
 import "./ManageQuestion.scss";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
+import { setPreviewState } from "../../../redux/action/previewAction";
 const UpdateQA = (props) => {
   const [previewImage, setPreviewImage] = useState([]);
   const [listQuestion, setListQuestion] = useState([]);
@@ -65,31 +69,42 @@ const UpdateQA = (props) => {
       .then((res) => res.arrayBuffer())
       .then((buf) => new File([buf], filename, { type: mimeType }));
   }
+  const previewStateRedux= useSelector(state=>state.preview).filter(element => element !== null)
+  // console.log(previewStateRedux)
   const fetchQuizWithQA = async (quizId) => {
     let res = await getQuizWithQA(quizId);
     const raw_qa_data = res.DT.qa;
     if (res && res.EC === 0) {
       for (let i = 0; i < raw_qa_data.length; i++) {
-        raw_qa_data[i].isShow = false;
-        // if (raw_qa_data[i].imageFile) {
-        //   raw_qa_data[i].imageFile = await urltoFile(
-        //     `data:image/png;base64,${raw_qa_data[i].imageFile}`,
-        //     `question-${raw_qa_data[i].id}.png`,
-        //     "image/png"
-        //   );
-        //   console.log(URL.createObjectURL(raw_qa_data[i].imageFile));
-        // }
+        const id=raw_qa_data[i].id
+        const index=previewStateRedux.findIndex(q=>q?.id===id)
+        // console.log(index)
+
+        raw_qa_data[i].isShow =index!==-1?previewStateRedux[index].value:false;
+        if (raw_qa_data[i].imageFile) {
+          //convert base64 to file object
+          raw_qa_data[i].imageFile = await urltoFile(
+            `data:image/png;base64,${raw_qa_data[i].imageFile}`,
+            `question-${raw_qa_data[i].id}.png`,
+            "image/png"
+          );
+          // console.log(URL.createObjectURL(raw_qa_data[i].imageFile));
+        }
       }
-      console.log(raw_qa_data);
+      // console.log(raw_qa_data);
       setListQuestion(raw_qa_data);
     }
   };
+ 
   useEffect(() => {
     fetchQuizData();
   }, []);
   useEffect(() => {
     fetchQuizWithQA(selectedQuiz.value);
   }, [selectedQuiz]);
+  useEffect(() => {
+    localStorage.setItem('previewimage', JSON.stringify(previewImage));
+  }, [previewImage]);
   const handleAddNewQuestion = async () => {
     setListQuestion([
       ...listQuestion,
@@ -195,14 +210,11 @@ const UpdateQA = (props) => {
     }
   };
   const handleOnchangeFile = (e, questionId, index) => {
-    console.log(questionId);
     if (e.target && e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      console.log(URL.createObjectURL(file));
       const cloneListQuestion = [...listQuestion];
       const Qindex = cloneListQuestion.findIndex((q) => q.id === questionId);
       cloneListQuestion[Qindex].imageFile = file;
-      console.log(URL.createObjectURL(file));
       cloneListQuestion[Qindex].imageName = file.name;
       setListQuestion(cloneListQuestion);
     }
@@ -212,12 +224,29 @@ const UpdateQA = (props) => {
   //   const index = clonePreviewImage.findIndex((img) => img.id === questionId);
   //   return index;
   // };
+  const dispatch = useDispatch();
   const handleShowImagePreview = (questionId) => {
+    const previewImageClone=[...previewImage];
     const cloneListQuestion = [...listQuestion];
+    // console.log(cloneListQuestion);
     const index = cloneListQuestion.findIndex((q) => q.id === questionId);
     if (cloneListQuestion[index].imageFile) {
-      cloneListQuestion[index].isShow = !cloneListQuestion[index].isShow;
+
+      cloneListQuestion[index].isShow = ! cloneListQuestion[index].isShow;
+      //store previous state of preview image
+   dispatch(setPreviewState({
+    id: questionId,
+    value: cloneListQuestion[index].isShow,
+  }))
+     
+     
     }
+    setListQuestion(cloneListQuestion);
+  };
+  const handleCloseLightBox = (questionId) => {
+    const cloneListQuestion = [...listQuestion];
+    const index = cloneListQuestion.findIndex((q) => q.id === questionId);
+    cloneListQuestion[index].isShow =false;
     setListQuestion(cloneListQuestion);
   };
   const handleUpdateQA = async () => {
@@ -321,7 +350,7 @@ const UpdateQA = (props) => {
         quizId: selectedQuiz.value,
         questions: await Promise.all(
           cloneListQuestion.map(async (question) => {
-            const base64TextFile = question?.imageFile
+            const base64TextFile = question.imageFile
               ? await toBase64(question.imageFile)
               : "";
             console.log(base64TextFile);
@@ -437,7 +466,7 @@ const UpdateQA = (props) => {
                         <>
                           <span
                             onClick={() => {
-                              return handleShowImagePreview(question.id);
+                               handleShowImagePreview(question.id);
                             }}
                             className="image-text-hover"
                           >
@@ -446,20 +475,20 @@ const UpdateQA = (props) => {
                             </span>
                           </span>
                           <FsLightbox
+                          
+                          // onShow={() => {
+                          //   handleShowImagePreview(question.id);
+                          // }}
                             toggler={question.isShow}
                             sources={[
                               `
-                              data:image/png;base64,${question.imageFile}`,
+                              ${URL.createObjectURL(question.imageFile)}`,
                             ]}
+                            key={question.id}
+                            // onClose={() => {
+                            //   handleCloseLightBox(question.id);
+                            // }}
                           />
-                          {/* <a
-                            data-fslightbox
-                            href="data:image/jpeg;base64,[.....]"
-                          >
-                            <img src="data:image/jpeg;base64,[.....]" />
-                          </a> */}
-                          {/* <span>{URL.createObjectURL(question.imageFile)}</span>
-                         <img src={URL.createObjectURL(question.imageFile)} alt="" /> */}
                         </>
                       )}
                       {!question.imageFile && <span>0 file is uploaded</span>}

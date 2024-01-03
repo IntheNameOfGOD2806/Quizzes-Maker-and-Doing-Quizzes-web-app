@@ -5,6 +5,7 @@ import _ from "lodash";
 import "./DetailQuiz.scss";
 import Question from "./Question";
 import ModalResult from "./ModalResult";
+import RightContent from "./content/RightContent";
 const DetailQuiz = (props) => {
   const { id } = useParams();
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -85,7 +86,7 @@ const DetailQuiz = (props) => {
           <div className="title">
             <span>Quiz {id}:</span> <span>{location?.state?.description}</span>
           </div>
-          <hr />
+         
           <div className="quiz-body">
             <img src="" alt="" />
           </div>
@@ -95,6 +96,7 @@ const DetailQuiz = (props) => {
             setCurrentQuestion={setCurrentQuestion}
             updateIsSelectd={updateIsSelectd}
             submitAnswer={submitAnswer}
+           
           />
           <ModalResult
             show={showModalResult}
@@ -103,7 +105,14 @@ const DetailQuiz = (props) => {
           />
           {/* <div onClick={()=>{setShowModalResult(true)}} className="btn btn-danger">show modal test</div> */}
         </div>
-        <div className="right-content">count down</div>
+        <div className="right-content">
+          <RightContent 
+            currentQuestion={currentQuestion}
+            setCurrentQuestion={setCurrentQuestion}
+            listQuestion={listQuestion}
+           submitAnswer={submitAnswer}
+          />
+        </div>
       </div>
     </>
   );

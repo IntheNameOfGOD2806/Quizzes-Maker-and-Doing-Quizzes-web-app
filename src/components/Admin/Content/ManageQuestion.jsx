@@ -274,18 +274,19 @@ const ManageQuestion = (props) => {
         }
         //submit answer
         for (const answer of question.answers) {
-          const a = await postCreateNewAnswerForQuestion(
+          var a = await postCreateNewAnswerForQuestion(
             +q.DT.id,
             answer.description,
             answer.isCorrect
           );
-          if (a.EC !== 0) {
+          
+        }
+        if (a.EC !== 0) {
             toast.error(a.EM);
             return;
           } else if (a.EC === 0) {
             toast.success(a.EM, { theme: "dark" });
           }
-        }
       }
     }
   };
@@ -576,7 +577,7 @@ const ManageQuestion = (props) => {
                       </div>
                     );
                   })}
-                <hr />
+                {/* <hr /> */}
                 {listQuestion.length !== 0 && (
                   <div className="submit-button">
                     <button

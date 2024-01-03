@@ -4,7 +4,6 @@
     gap: 4px;
     width: 100%;
     justify-content: end;
-
     padding: 5px 10px;
     button {
       background-color: transparent;
@@ -28,7 +27,6 @@
     .form-group {
         .input-password{
             position: relative;
-         
             .eye{
                 position: absolute;
                 right:5px;
@@ -38,10 +36,8 @@
       display: flex;
       flex-direction: column;
       row-gap: 5px;
-
       .btn-login {
         &:disabled {
-          
           background-color: gray;
           cursor: not-allowed;
           border: none;
