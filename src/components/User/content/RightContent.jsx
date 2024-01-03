@@ -1,9 +1,7 @@
 import { useState } from "react";
-import "./RightContent.scss";
-import FsLightbox from "fslightbox-react";
-import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import CountDown from "./CountDown";
+import "./RightContent.scss";
 const RightContent = (props) => {
   const { currentQuestion, setCurrentQuestion, listQuestion } = props;
   const leng = listQuestion.length;

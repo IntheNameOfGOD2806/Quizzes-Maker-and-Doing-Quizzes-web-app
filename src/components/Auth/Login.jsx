@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { userLoginSucces } from "../../redux/action/authAction";
 import { LiaSpinnerSolid } from "react-icons/lia";
+import { Navigate } from "react-router-dom";
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,17 +23,16 @@ const Login = (props) => {
     if (data && data.EC === 0) {
       //shoot the data to redux
       dispatch(userLoginSucces(data));
-
-      setTimeout(() => {
-        toast.success(data.EM, {
-          position: toast.POSITION.TOP_RIGHT,
-          className: "foo-bar",
-          autoClose: 2000,
-          draggable: true,
-        });
+      
+      toast.success(data.EM, {
+        position: toast.POSITION.TOP_CENTER,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
         setIsLoading(false);
-        navigate("/");
-      },2000 );
+      navigate("/");
+      
     }
     if (data && data.EC !== 0) {
       setTimeout(() => {
@@ -44,16 +44,13 @@ const Login = (props) => {
         });
         setIsLoading(false);
       },2000)
-     
     }
   };
-
   useEffect(() => {
     document
       .querySelector(showPassword ? "input[type=password]" : "input[type=text]")
       ?.setAttribute("type", showPassword ? "text" : "password");
   }, [showPassword]);
-
   function handleGoBack() {
     // Navigate to the home page
     navigate("/");
@@ -117,7 +114,6 @@ const Login = (props) => {
                 style={{ marginRight: "3px" }}
               />
             )}
-
             <span>Sign In to Quizzlet</span>
           </button>
           <div className="text-center">

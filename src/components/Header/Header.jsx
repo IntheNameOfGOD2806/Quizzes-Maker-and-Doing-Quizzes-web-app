@@ -4,8 +4,14 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { Outlet, Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
+import{toast} from "react-toastify"
+import { postUserLogOut } from "../../services/apiservice";
+import { userLogout } from "../../redux/action/authAction";
 const Header = () => {
+  const email=useSelector((state) => state.user.account.email);
+  const refresh_token=useSelector((state) => state.user.account.refresh_token);
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const account = useSelector((state) => state.user.account);
   // console.log(isAuthenticated, account);
@@ -16,6 +22,30 @@ const Header = () => {
   const handleRegister = () => {
     navigate("/Register");
   };
+  const handleLogOut = async() => {
+    let res= await postUserLogOut(email,refresh_token);
+    if(res && res.EC===0){
+      
+      dispatch(userLogout());
+      toast.warning(res.EM, {
+        position: toast.POSITION.TOP_CENTER,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+        theme: "dark",
+      });
+      navigate("/");
+    }
+    if(res && res.EC!==0){
+      toast.error(res.EM, {
+        position: toast.POSITION.TOP_CENTER,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+        theme: "dark",
+      });
+    }
+  }
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -45,7 +75,7 @@ const Header = () => {
                   id="basic-nav-dropdown"
                 >
                  
-                  <NavDropdown.Item>Log Out</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => handleLogOut()}> Log Out</NavDropdown.Item>
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item>Separated link</NavDropdown.Item>

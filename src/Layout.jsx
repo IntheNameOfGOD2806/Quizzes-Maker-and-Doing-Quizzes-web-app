@@ -1,32 +1,33 @@
-import React from "react";
-import "./index.css";
-import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Provider } from "react-redux";
-import { store, persistor } from "../src/redux/store";
-import { createBrowserRouter, RouterProvider,  } from "react-router-dom";
-import ErrorPage from "./error-page";
-import Admin from "./components/Admin/Admin";
-import Contact from "./routes/contact";
-import Login from "./components/Auth/Login";
-import Homepage from "./components/Home/HomePage";
-import DashBoard from "./components/Admin/Content/DashBoard";
-import ManageUser from "./components/Admin/Content/ManageUser";
+import React from "react";
+import App from "./App";
+import "./index.css";
+// import { Provider } from "react-redux";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import { useSelector } from "react-redux";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Register from "./components/Auth/Register";
 import { PersistGate } from "redux-persist/integration/react";
-import ListQuiz from "./components/User/listQuiz";
-import DetailQuiz from "./components/User/DetailQuiz";
-import ManageQuiz from "./components/Admin/Content/ManageQuiz";
+import { persistor } from "../src/redux/store";
+import Admin from "./components/Admin/Admin";
+import DashBoard from "./components/Admin/Content/DashBoard";
 import ManageQuestion from "./components/Admin/Content/ManageQuestion";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import 'react-perfect-scrollbar/dist/css/styles.css';
-
+import ManageQuiz from "./components/Admin/Content/ManageQuiz";
+import ManageUser from "./components/Admin/Content/ManageUser";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
+import Homepage from "./components/Home/HomePage";
+import DetailQuiz from "./components/User/DetailQuiz";
+import ListQuiz from "./components/User/listQuiz";
+import ErrorPage from "./error-page";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
 const Layout = (props) => {
+  const isLoginned = useSelector((state) => state.user.isAuthenticated);
+  console.log(isLoginned);
   const router = createBrowserRouter([
     {
       path: "/",
@@ -39,20 +40,15 @@ const Layout = (props) => {
           errorElement: <ErrorPage></ErrorPage>,
         },
         {
-          path: "contacts",
-          element: <Contact />,
-          errorElement: <ErrorPage></ErrorPage>,
-        },
-        {
           path: "/user",
-          element: <ListQuiz></ListQuiz>,
+          element:isLoginned?  <ListQuiz />:<Navigate to="/login"/>,
           errorElement: <ErrorPage></ErrorPage>,
         },
       ],
     },
     {
       path: "/Admin",
-      element: <Admin></Admin>,
+      element: isLoginned?  <Admin />:<Navigate to="/login"/>,
       errorElement: <ErrorPage></ErrorPage>,
       children: [
         {
@@ -95,11 +91,9 @@ const Layout = (props) => {
   ]);
   return (
     <>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <RouterProvider router={router}></RouterProvider>
-        </PersistGate>
-      </Provider>
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router}></RouterProvider>
+      </PersistGate>
       <ToastContainer></ToastContainer>
     </>
   );

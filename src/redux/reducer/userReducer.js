@@ -5,14 +5,15 @@ const INITIAL_STATE = {
         refresh_token: "",
         username: "",
         image: "",
-        role: ""
+        role: "",
+        email:'',
     },
     isAuthenticated: false,
 };
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case USER_LOGIN_SUCCESS:
-            const { DT } = action.payload;
+            const  DT  = action.payload.DT;
             return {
                 ...state,
                 account: {
@@ -21,13 +22,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
                     username: DT?.username,
                     image: DT?.image,
                     role: DT?.role
+                    ,email:DT?.email
                 },
                 isAuthenticated: true
             };
         case USER_LOGOUT:
             return {
                 ...state,
-                count: state.count - 1
+                isAuthenticated: false
             };
         default:
             return state;

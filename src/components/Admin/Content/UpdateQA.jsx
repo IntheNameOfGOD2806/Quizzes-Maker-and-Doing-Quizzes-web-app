@@ -69,6 +69,7 @@ const UpdateQA = (props) => {
       .then((res) => res.arrayBuffer())
       .then((buf) => new File([buf], filename, { type: mimeType }));
   }
+  //truy cap vao redux
   const previewStateRedux= useSelector(state=>state.preview).filter(element => element !== null)
   // console.log(previewStateRedux)
   const fetchQuizWithQA = async (quizId) => {
