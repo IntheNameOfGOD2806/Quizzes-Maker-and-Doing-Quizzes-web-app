@@ -6,7 +6,11 @@ import "./index.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { useSelector } from "react-redux";
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
@@ -22,6 +26,7 @@ import Homepage from "./components/Home/HomePage";
 import DetailQuiz from "./components/User/DetailQuiz";
 import ListQuiz from "./components/User/listQuiz";
 import ErrorPage from "./error-page";
+import { Suspense } from "react";
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
@@ -41,14 +46,14 @@ const Layout = (props) => {
         },
         {
           path: "/user",
-          element:isLoginned?  <ListQuiz />:<Navigate to="/login"/>,
+          element: isLoginned ? <ListQuiz /> : <Navigate to="/login" />,
           errorElement: <ErrorPage></ErrorPage>,
         },
       ],
     },
     {
       path: "/Admin",
-      element: isLoginned?  <Admin />:<Navigate to="/login"/>,
+      element: isLoginned ? <Admin /> : <Navigate to="/login" />,
       errorElement: <ErrorPage></ErrorPage>,
       children: [
         {
@@ -92,7 +97,9 @@ const Layout = (props) => {
   return (
     <>
       <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router}></RouterProvider>
+        <Suspense fallback="loading">
+          <RouterProvider router={router}></RouterProvider>
+        </Suspense>
       </PersistGate>
       <ToastContainer></ToastContainer>
     </>

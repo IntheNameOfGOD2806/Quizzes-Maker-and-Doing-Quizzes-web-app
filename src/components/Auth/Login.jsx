@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { userLoginSucces } from "../../redux/action/authAction";
 import { LiaSpinnerSolid } from "react-icons/lia";
 import { Navigate } from "react-router-dom";
+import Language from "../Header/language";
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,16 +24,15 @@ const Login = (props) => {
     if (data && data.EC === 0) {
       //shoot the data to redux
       dispatch(userLoginSucces(data));
-      
+
       toast.success(data.EM, {
         position: toast.POSITION.TOP_CENTER,
         className: "foo-bar",
         autoClose: 2000,
         draggable: true,
       });
-        setIsLoading(false);
+      setIsLoading(false);
       navigate("/");
-      
     }
     if (data && data.EC !== 0) {
       setTimeout(() => {
@@ -43,7 +43,7 @@ const Login = (props) => {
           draggable: true,
         });
         setIsLoading(false);
-      },2000)
+      }, 2000);
     }
   };
   useEffect(() => {
@@ -60,7 +60,8 @@ const Login = (props) => {
       <div className="header">
         <span>Don't have an account yet?</span>
         <button onClick={() => navigate("/register")}>Sign Up</button>
-        <span className="contact">Contact us</span>
+        <span style={{marginRight:'70px'}} className="contact">Contact us</span>
+        < Language />
       </div>
       <div className="login-title">Quizzlet</div>
       <div className="welcome">Hello, who’s this?</div>
@@ -84,6 +85,11 @@ const Login = (props) => {
               className="form-control"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
             />
             {showPassword && (
               <FaEye
@@ -117,10 +123,7 @@ const Login = (props) => {
             <span>Sign In to Quizzlet</span>
           </button>
           <div className="text-center">
-            <span
-              style={{ cursor: "pointer",  }}
-              onClick={() => handleGoBack()}
-            >
+            <span style={{ cursor: "pointer" }} onClick={() => handleGoBack()}>
               {" "}
               Go back to homepage
             </span>

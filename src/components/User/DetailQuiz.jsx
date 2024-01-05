@@ -68,7 +68,7 @@ const DetailQuiz = (props) => {
           });
           return {
             ...value[0],
-            answers: answers_array,
+            answers:_.orderBy(answers_array, ["id"], ["asc"]),
           };
         })
         .value();

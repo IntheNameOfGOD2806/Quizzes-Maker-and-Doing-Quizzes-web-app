@@ -31,7 +31,29 @@ $icon-size: 35px;
     overflow-x: hidden;
     width: 100%;
     .admin-header {
-      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      height: 80px;
+      .admin-header-right{
+        display: flex;
+        gap:20px;
+        padding-top: 10px;
+      }
+      .set-collapse-bar {
+        margin-left: 15px;
+        cursor: pointer;
+        font-size: 25px;
+        transition: box-shadow 0.3s linear;
+
+        &:hover {
+          border-radius: 40%;
+          box-shadow: -2px -1px 15px 16px rgba(238, 230, 230, 0.75);
+          border-right: 1px solid rgb(225, 216, 216);
+          border-bottom: 1px solid rgb(225, 216, 216);
+
+          animation: pulse 1s infinite;
+        }
+      }
     }
     .admin-main {
       width: 100%;
@@ -41,10 +63,10 @@ $icon-size: 35px;
           animation: pulse 1s infinite;
         }
       }
-      .pagination{
-            justify-content: center;
+      .pagination {
+        justify-content: center;
       }
-      .action{
+      .action {
         display: flex;
         justify-content: center;
       }
@@ -86,4 +108,15 @@ body {
       color: $highlight-color;
     }
   }
+}
+#dropdown-basic-button{
+  color:#0c1e35;
+  background-color: transparent;
+}
+.language{
+  padding-top: 6px;
+}
+.admin-hr{
+  position: relative;
+  bottom: 30px;
 }

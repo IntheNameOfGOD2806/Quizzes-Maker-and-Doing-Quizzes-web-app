@@ -1,0 +1,27 @@
+.dashboard-container {
+  //   border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  width: 98%;
+  .container-left {
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    .container-left-element {
+        font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: calc(50% - 10px);
+      border-radius: 10px;
+      height: 200px;
+      border: 1px solid orange;
+
+
+    }
+    .container-right {
+    }
+  }
+}
