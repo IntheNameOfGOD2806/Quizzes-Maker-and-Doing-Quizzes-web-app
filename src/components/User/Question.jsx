@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+import { IoMdCheckmark } from "react-icons/io";
+import { FaXmark } from "react-icons/fa6";
 const Question = (props) => {
   //ngai sua vl:))))
-  const { currentQuestion, setCurrentQuestion } = props;
+  const { currentQuestion, setCurrentQuestion,showAnswer,setShowAnswer } = props;
   //
   const { listQuestion } = props;
   const [previewImage, setPreviewImage] = useState(false);
@@ -59,6 +61,8 @@ const Question = (props) => {
                     htmlFor="flexCheckDefault"
                   >
                     {`${getAnswerLabel(index)}.${answer.description}`}
+                    {answer && answer.isCorrect && showAnswer && <><IoMdCheckmark style={{color:"green",marginLeft:"13px"}} /></>}
+                    {!answer.isCorrect && answer.isSelected && showAnswer && <><FaXmark style={{color:"red"}}/></>}
                   </label>
                 </div>
               </div>

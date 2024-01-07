@@ -152,14 +152,33 @@ const postUpSertQA = (data) => {
     return axios.post(`api/v1/quiz-upsert-qa`
         , data)
 }
-const postUserLogOut = (email,refresh_token) => {
+const postUserLogOut = (email, refresh_token) => {
     return axios.post(`api/v1/logout`,
-        {email,refresh_token})
+        { email, refresh_token })
+}
+const getDashBoardData = () => {
+    return axios.get(
+        `api/v1/overview`
+    );
+}
+const updateProfile = (username, userImage) => {
+    //submit data
+
+    const form = new FormData();
+    form.append("username", username);
+    form.append("userImage", userImage);
+    return axios.post(
+        `api/v1/profile`, form
+    );
+}
+const changePassword = (current_password,new_password) => {
+    return axios.post(
+        `api/v1/change-password`, {
+            current_password,
+            new_password
+        }
+    );
 }
 export {
-    assignQuizToUser, postUpSertQA,postUserLogOut,
-    putUpdateQuiz, getQuizWithQA, postCreateNewQuestionForQuiz, postCreateNewAnswerForQuestion,
-    deleteQuizById, getAllQuiz, postCreateQuiz, postSubmitQuiz, getQquizByQuizId, getQuizByUser,
-    postRegister, postCreateUser, getlistUsers, putUpdateUser, deleteUser,
-    getlistUsersPaginate, postLogin
-} 
+    changePassword, assignQuizToUser, deleteQuizById, deleteUser, getAllQuiz, getDashBoardData, getQquizByQuizId, getQuizByUser, getQuizWithQA, getlistUsers, getlistUsersPaginate, postCreateNewAnswerForQuestion, postCreateNewQuestionForQuiz, postCreateQuiz, postCreateUser, postLogin, postRegister, postSubmitQuiz, postUpSertQA, postUserLogOut, putUpdateQuiz, putUpdateUser, updateProfile
+};

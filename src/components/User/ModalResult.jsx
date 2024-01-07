@@ -7,7 +7,7 @@ import "animate.css";
 function ModalResult(props) {
 
 
-  const { show, setShow,dataModalResult } = props;
+  const { show, setShow,dataModalResult,setShowAnswer } = props;
 //   const handleDeleteUser = async () => {
 //     let data = await 
 //     // console.log(data)
@@ -32,6 +32,7 @@ function ModalResult(props) {
 //   };
 
   const handleClose = () => {
+    setShowAnswer(true)
     setShow(false);
   };
   return (
@@ -48,7 +49,8 @@ function ModalResult(props) {
           <Button variant="warning" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="danger" >
+          <Button onClick={()=>{handleClose()}} variant="danger" >
+            
             Show Result Details
           </Button>
         </Modal.Footer>

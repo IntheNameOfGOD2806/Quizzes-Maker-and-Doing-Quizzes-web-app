@@ -10,8 +10,10 @@ import { postUserLogOut } from "../../services/apiservice";
 import { userLogout } from "../../redux/action/authAction";
 
 import Language from "./language";
+import ModalUserProfile from "./ModalUserProfile";
+import { useState } from "react";
 const Header = () => {
-
+const[show,setShow]=useState(false);
   const email = useSelector((state) => state.user.account.email);
   const refresh_token = useSelector(
     (state) => state.user.account.refresh_token
@@ -86,7 +88,7 @@ const Header = () => {
                     {" "}
                     Log Out
                   </NavDropdown.Item>
-                  <NavDropdown.Item>Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => setShow(true)}>Profile</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item>Separated link</NavDropdown.Item>
                 </NavDropdown>
@@ -110,6 +112,10 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <ModalUserProfile
+      show={show}
+      onHide={() => setShow(false)}
+      />
     </>
   );
 };

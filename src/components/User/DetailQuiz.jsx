@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
-import { getQquizByQuizId, postSubmitQuiz } from "../../services/apiservice";
 import _ from "lodash";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { getQquizByQuizId, postSubmitQuiz } from "../../services/apiservice";
 import "./DetailQuiz.scss";
-import Question from "./Question";
 import ModalResult from "./ModalResult";
+import Question from "./Question";
 import RightContent from "./content/RightContent";
 const DetailQuiz = (props) => {
   const { id } = useParams();
@@ -12,6 +12,7 @@ const DetailQuiz = (props) => {
   const [listQuestion, setListQuestion] = useState([]);
   const [showModalResult, setShowModalResult] = useState(false);
   const [dataModalResult, setDataModalResult] = useState({});
+  const [showAnswer, setShowAnswer] = useState(false);
   //   console.log(listQuestion);
   const location = useLocation();
   const submitAnswer = async () => {
@@ -29,7 +30,30 @@ const DetailQuiz = (props) => {
     // console.log(JSON.stringify(dataSubmit));
     let res = await postSubmitQuiz(dataSubmit);
     if (res && res.EC === 0) {
-      //   console.log(res);
+      console.log("check system asnw", res.DT.quizData);
+      const cloneListQuestion = _.cloneDeep(listQuestion);
+      console.log(cloneListQuestion);
+      for (let i = 0; i < res.DT.quizData.length; i++) {
+        const questionID = res.DT.quizData[i].questionId;
+        const listCorrectAnswerId = [];
+        for (let j = 0; j < res.DT.quizData[i].systemAnswers.length; j++) {
+          if (res.DT.quizData[i].systemAnswers[j]) {
+            listCorrectAnswerId.push(res.DT.quizData[i].systemAnswers[j].id);
+            for (let k = 0; k < listCorrectAnswerId.length; k++) {
+              const index = cloneListQuestion[
+                cloneListQuestion.findIndex((q) => q.id === questionID)
+              ].answers.findIndex((a) => a.id === listCorrectAnswerId[k]);
+              cloneListQuestion[
+                cloneListQuestion.findIndex((q) => q.id === questionID)
+              ].answers[index].isCorrect = true;
+            }
+          }
+          console.log(listCorrectAnswerId)
+        }
+        // cloneListQuestion.findIndex(q=>q.)
+      }
+      console.log(cloneListQuestion);
+      setListQuestion(cloneListQuestion)
       setShowModalResult(true);
       setDataModalResult(res.DT);
     }
@@ -62,13 +86,13 @@ const DetailQuiz = (props) => {
         .map((value, key) => {
           const answers_array = [];
           value.forEach((item) => {
-            //flag 
+            //flag
             item.answers.isSelected = false;
             answers_array.push(item.answers);
           });
           return {
             ...value[0],
-            answers:_.orderBy(answers_array, ["id"], ["asc"]),
+            answers: _.orderBy(answers_array, ["id"], ["asc"]),
           };
         })
         .value();
@@ -86,19 +110,22 @@ const DetailQuiz = (props) => {
           <div className="title">
             <span>Quiz {id}:</span> <span>{location?.state?.description}</span>
           </div>
-         
+
           <div className="quiz-body">
             <img src="" alt="" />
           </div>
           <Question
+            showAnswer={showAnswer}
+           
             currentQuestion={currentQuestion}
             listQuestion={listQuestion}
             setCurrentQuestion={setCurrentQuestion}
             updateIsSelectd={updateIsSelectd}
             submitAnswer={submitAnswer}
-           
           />
           <ModalResult
+            setShowAnswer={setShowAnswer}
+
             show={showModalResult}
             setShow={setShowModalResult}
             dataModalResult={dataModalResult}
@@ -106,11 +133,11 @@ const DetailQuiz = (props) => {
           {/* <div onClick={()=>{setShowModalResult(true)}} className="btn btn-danger">show modal test</div> */}
         </div>
         <div className="right-content">
-          <RightContent 
+          <RightContent
             currentQuestion={currentQuestion}
             setCurrentQuestion={setCurrentQuestion}
             listQuestion={listQuestion}
-           submitAnswer={submitAnswer}
+            submitAnswer={submitAnswer}
           />
         </div>
       </div>

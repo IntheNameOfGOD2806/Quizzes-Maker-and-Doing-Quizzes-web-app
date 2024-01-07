@@ -9,7 +9,7 @@ import { postCreateUser } from "../../../services/apiservice";
 function ModalUser(props) {
   const style1 = { color: "#0B5ED7" };
   const { show, setShow } = props;
-  const { reRenderListUser } = props;
+  // const { reRenderListUser } = props;
   const{page,setPage}=props;
   //statelization
   const [email, setEmail] = useState("");
