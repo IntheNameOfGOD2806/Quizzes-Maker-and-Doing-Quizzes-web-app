@@ -1,3 +1,11 @@
+
+
+
+
+
+
+
+
 import { SET_PREVIEW_STATE } from "../action/previewAction"; 
 const INITIAL_STATE = [];
 const previewReducer = (state = INITIAL_STATE, action) => {

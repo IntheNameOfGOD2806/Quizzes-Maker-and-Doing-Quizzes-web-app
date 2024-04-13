@@ -33,7 +33,7 @@ const UpdateQA = (props) => {
     listQuiz.map((quiz) => {
       return {
         value: quiz.id,
-        label: `${quiz.id}-${quiz.name}`,
+        label: `${quiz.id}-${quiz.name}-${quiz.description}`,
       };
     });
   const [selectedQuiz, setSelectedQuiz] = useState("");

@@ -1,11 +1,11 @@
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import ViewProfile from "./ViewProfile";
-import { changePassword } from "../../services/apiservice";
-import { useState } from "react";
 import { toast } from "react-toastify";
+import { changePassword } from "../../services/apiservice";
+import ViewProfile from "./ViewProfile";
 function ModalUserProfile(props) {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -13,7 +13,7 @@ function ModalUserProfile(props) {
         let res=await changePassword(currentPassword,newPassword);
          if(res&&res.EC===0){
             toast.success(res.EM, {
-                position: toast.POSITION.TOP_CENTER,
+                position: toast.POSITION.TOP_LEFT,
                 className: "foo-bar",
                 autoClose: 2000,
                 draggable: true,
@@ -22,7 +22,7 @@ function ModalUserProfile(props) {
          }
          if(res&&res.EC!==0){
             toast.error(res.EM, {
-                position: toast.POSITION.TOP_CENTER,
+                position: toast.POSITION.TOP_LEFT,
                 className: "foo-bar",
                 autoClose: 2000,
                 draggable: true,

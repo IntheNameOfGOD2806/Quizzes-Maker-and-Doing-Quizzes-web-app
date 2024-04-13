@@ -1,19 +1,28 @@
-import "./Login.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { postLogin } from "../../services/apiservice";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { userLoginSucces } from "../../redux/action/authAction";
 import { LiaSpinnerSolid } from "react-icons/lia";
-import { Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { userLoginSucces } from "../../redux/action/authAction";
+import { postLogin } from "../../services/apiservice";
 import Language from "../Header/language";
+import "./Login.scss";
 const Login = (props) => {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.search) {
+      toast.error(`${new URLSearchParams(location.search).get("msg")}`, {
+        position: toast.POSITION.TOP_LEFT,
+        className: "foo-bar",
+        autoClose: 2000,
+        draggable: true,
+      });
+    }
+  }, [location.search]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,7 +35,7 @@ const Login = (props) => {
       dispatch(userLoginSucces(data));
 
       toast.success(data.EM, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.TOP_LEFT,
         className: "foo-bar",
         autoClose: 2000,
         draggable: true,
@@ -60,8 +69,10 @@ const Login = (props) => {
       <div className="header">
         <span>Don't have an account yet?</span>
         <button onClick={() => navigate("/register")}>Sign Up</button>
-        <span style={{marginRight:'70px'}} className="contact">Contact us</span>
-        < Language />
+        <span style={{ marginRight: "70px" }} className="contact">
+          Contact us
+        </span>
+        <Language />
       </div>
       <div className="login-title">Quizzlet</div>
       <div className="welcome">Hello, who’s this?</div>

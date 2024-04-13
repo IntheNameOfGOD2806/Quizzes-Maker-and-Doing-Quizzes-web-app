@@ -35,6 +35,7 @@ function ModalResult(props) {
     setShowAnswer(true)
     setShow(false);
   };
+
   return (
     <>
       <Modal show={show} onHide={()=>setShow(false)}>

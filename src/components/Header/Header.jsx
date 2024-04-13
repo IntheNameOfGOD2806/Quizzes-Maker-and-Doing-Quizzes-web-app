@@ -2,16 +2,15 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { Outlet, Link, NavLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { postUserLogOut } from "../../services/apiservice";
 import { userLogout } from "../../redux/action/authAction";
+import { postUserLogOut } from "../../services/apiservice";
 
+import { useState } from "react";
 import Language from "./language";
 import ModalUserProfile from "./ModalUserProfile";
-import { useState } from "react";
 const Header = () => {
 const[show,setShow]=useState(false);
   const email = useSelector((state) => state.user.account.email);
@@ -34,7 +33,7 @@ const[show,setShow]=useState(false);
     if (res && res.EC === 0) {
       dispatch(userLogout());
       toast.warning(res.EM, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.TOP_LEFT,
         className: "foo-bar",
         autoClose: 2000,
         draggable: true,
@@ -44,7 +43,7 @@ const[show,setShow]=useState(false);
     }
     if (res && res.EC !== 0) {
       toast.error(res.EM, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.TOP_LEFT,
         className: "foo-bar",
         autoClose: 2000,
         draggable: true,

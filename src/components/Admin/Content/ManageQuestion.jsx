@@ -11,16 +11,16 @@ import { LuImagePlus } from "react-icons/lu";
 import { PiPlusSquareThin } from "react-icons/pi";
 import Select from "react-select";
 import { Slide, toast } from "react-toastify";
-import { v4 as uuidv4, validate } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import {
   getAllQuiz,
   getQuizWithQA,
   postCreateNewAnswerForQuestion,
   postCreateNewQuestionForQuiz,
 } from "../../../services/apiservice";
+import AssignQuiz from "./AssignQuiz";
 import "./ManageQuestion.scss";
 import UpdateQA from "./UpdateQA";
-import AssignQuiz from "./AssignQuiz";
 const ManageQuestion = (props) => {
   // const [toggler, setToggler] = useState(false);
   const [previewImage, setPreviewImage] = useState([]);
@@ -31,7 +31,7 @@ const ManageQuestion = (props) => {
     listQuiz.map((quiz) => {
       return {
         value: quiz.id,
-        label: `${quiz.id}-${quiz.name}`,
+        label: `${quiz.id}-${quiz.name}-${quiz.description}`,
       };
     });
   const [selectedQuiz, setSelectedQuiz] = useState("");

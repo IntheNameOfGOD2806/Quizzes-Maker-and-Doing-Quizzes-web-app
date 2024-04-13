@@ -6,6 +6,21 @@ import "./DetailQuiz.scss";
 import ModalResult from "./ModalResult";
 import Question from "./Question";
 import RightContent from "./content/RightContent";
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
+
+function Breadcrumb1() {
+  return (
+    <Breadcrumb>
+      <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+      <Breadcrumb.Item href="/user">
+        User
+      </Breadcrumb.Item>
+      <Breadcrumb.Item active>Doing Quiz</Breadcrumb.Item>
+    </Breadcrumb>
+  );
+}
+
+
 const DetailQuiz = (props) => {
   const { id } = useParams();
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -13,21 +28,23 @@ const DetailQuiz = (props) => {
   const [showModalResult, setShowModalResult] = useState(false);
   const [dataModalResult, setDataModalResult] = useState({});
   const [showAnswer, setShowAnswer] = useState(false);
+  const[stopTimer,setStopTimer] = useState(false);
   //   console.log(listQuestion);
   const location = useLocation();
   const submitAnswer = async () => {
     const dataSubmit = {
       quizId: id,
-      answers: listQuestion.map((item) => {
+      answers: listQuestion.map((question) => {
         return {
-          questionId: item.id,
-          userAnswerId: item.answers
+          questionId: question.id,
+          userAnswerId: question.answers
             .filter((answer) => answer.isSelected)
             .map((answer) => answer.id),
         };
       }),
     };
     // console.log(JSON.stringify(dataSubmit));
+    // get result and display true/ false
     let res = await postSubmitQuiz(dataSubmit);
     if (res && res.EC === 0) {
       console.log("check system asnw", res.DT.quizData);
@@ -56,17 +73,18 @@ const DetailQuiz = (props) => {
       setListQuestion(cloneListQuestion)
       setShowModalResult(true);
       setDataModalResult(res.DT);
+      setStopTimer(true);
     }
   };
   const updateIsSelectd = (questionId, answerId) => {
-    const selectedQuestion = [...listQuestion].find((question) => {
+    const cloneListQuestion = _.cloneDeep(listQuestion);
+    const selectedQuestion = cloneListQuestion.find((question) => {
       return question.id === questionId;
     });
     const toChangeQuestion = selectedQuestion.answers.find((answer) => {
       return answer.id === answerId;
     });
     toChangeQuestion.isSelected = !toChangeQuestion.isSelected;
-    const cloneListQuestion = _.cloneDeep(listQuestion);
     var index = cloneListQuestion.findIndex((x) => x.id === questionId);
     cloneListQuestion[index] = selectedQuestion;
     setListQuestion(cloneListQuestion);
@@ -104,7 +122,10 @@ const DetailQuiz = (props) => {
     fetchQuizData();
   }, [id]);
   return (
-    <>
+    <> <div style={{margin:"30px 0px 0px 40px"}}>
+
+    <Breadcrumb1/>
+    </div>
       <div className="detail-quiz-container">
         <div className="left-content">
           <div className="title">
@@ -134,6 +155,8 @@ const DetailQuiz = (props) => {
         </div>
         <div className="right-content">
           <RightContent
+            setStopTimer={setStopTimer}
+            stopTimer={stopTimer}
             currentQuestion={currentQuestion}
             setCurrentQuestion={setCurrentQuestion}
             listQuestion={listQuestion}

@@ -22,7 +22,7 @@ const ViewProfile = (props) => {
       let data = await updateProfile(username,image);
       if (data && data.EC === 0) {
         toast.success(data.EM, {
-          position: toast.POSITION.TOP_CENTER,
+          position: toast.POSITION.TOP_LEFT,
           className: "foo-bar",
           autoClose: 2000,
           draggable: true,
@@ -31,7 +31,7 @@ const ViewProfile = (props) => {
       }
       if (data && data.EC !== 0) {
         toast.error(data.EM, {
-          position: toast.POSITION.TOP_CENTER,
+          position: toast.POSITION.TOP_LEFT,
           className: "foo-bar",
           autoClose: 2000,
           draggable: true,

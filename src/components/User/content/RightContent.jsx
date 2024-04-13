@@ -19,13 +19,16 @@ const RightContent = (props) => {
         return "answered";
       }
     }
-    
   };
   return (
     <>
       <div className="container">
         <div className="timer-container">
-          <CountDown submitAnswer={submitAnswer} />
+          <CountDown
+            setStopTimer={props.setStopTimer}
+            stopTimer={props.stopTimer}
+            submitAnswer={submitAnswer}
+          />
         </div>
         <hr />
         <div className="question-round">

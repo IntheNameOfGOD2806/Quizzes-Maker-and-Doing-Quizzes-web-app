@@ -26,7 +26,7 @@ instance.interceptors.response.use(function (response) {
 
     setTimeout(() => {
         NProgress.done();
-    }, 2000)
+    }, 1000)
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     return response && response.data ? response.data : response;

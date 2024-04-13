@@ -27,11 +27,14 @@ import DetailQuiz from "./components/User/DetailQuiz";
 import ListQuiz from "./components/User/listQuiz";
 import ErrorPage from "./error-page";
 import { Suspense } from "react";
+
 // import Root from './routes/Root';
 // import ErrorPage from './error-page';
 // import Contact from './routes/contact';
 const Layout = (props) => {
+
   const isLoginned = useSelector((state) => state.user.isAuthenticated);
+  const isAdmin = useSelector((state) => state.user.account.role);
   console.log(isLoginned);
   const router = createBrowserRouter([
     {
@@ -53,7 +56,7 @@ const Layout = (props) => {
     },
     {
       path: "/Admin",
-      element: isLoginned ? <Admin /> : <Navigate to="/login" />,
+      element: isLoginned && isAdmin==="ADMIN" ? <Admin /> : <Navigate to="/login?msg=Please login as admin" replace />,
       errorElement: <ErrorPage></ErrorPage>,
       children: [
         {

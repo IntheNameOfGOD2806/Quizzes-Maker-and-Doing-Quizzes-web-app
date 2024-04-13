@@ -69,7 +69,7 @@ const SideBar = (props) => {
               >
                 <NavLink to="">dashboard</NavLink>
               </MenuItem>
-              <MenuItem icon={<FaGem />}> components</MenuItem>
+           
             </Menu>
             <Menu iconShape="circle">
               <SubMenu
@@ -91,30 +91,8 @@ const SideBar = (props) => {
                   <Link to="ManageQuestion">Manage Question</Link>{" "}
                 </MenuItem>
               </SubMenu>
-              <SubMenu
-                prefix={<span className="badge gray"></span>}
-                icon={<FaHeart />}
-              >
-                <MenuItem> 1</MenuItem>
-                <MenuItem> 2</MenuItem>
-                <MenuItem> 3</MenuItem>
-              </SubMenu>
-              <SubMenu
-                prefix={<span className="badge gray"></span>}
-                icon={<FaHeart />}
-              >
-                <MenuItem> 1 </MenuItem>
-                <MenuItem> 2 </MenuItem>
-                <SubMenu title={`$ 3`}>
-                  <MenuItem> 3.1 </MenuItem>
-                  <MenuItem> 3.2 </MenuItem>
-                  <SubMenu title={`$ 3.3`}>
-                    <MenuItem> 3.3.1 </MenuItem>
-                    <MenuItem> 3.3.2 </MenuItem>
-                    <MenuItem> 3.3.3 </MenuItem>
-                  </SubMenu>
-                </SubMenu>
-              </SubMenu>
+            
+         
             </Menu>
           </SidebarContent>
 

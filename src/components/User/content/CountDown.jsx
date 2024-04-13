@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 const CountDown = (props) => {
   const [count, setCount] = useState(10);
   useEffect(() => {
+    if(props.stopTimer===true) {
+      return;
+    }
     if (count === 0) {
       props.submitAnswer();
       return;
