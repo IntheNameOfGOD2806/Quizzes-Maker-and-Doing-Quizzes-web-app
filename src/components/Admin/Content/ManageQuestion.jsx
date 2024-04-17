@@ -259,7 +259,7 @@ const ManageQuestion = (props) => {
       }
     });
     //call api
-    if (checkValidate) {
+    if (checkValidate ) {
       for (const question of listQuestion) {
         const q = await postCreateNewQuestionForQuiz(
           selectedQuiz.value,

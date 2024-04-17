@@ -10,7 +10,7 @@ function ModalUser(props) {
   const style1 = { color: "#0B5ED7" };
   const { show, setShow } = props;
   // const { reRenderListUser } = props;
-  const{page,setPage}=props;
+  const { page, setPage } = props;
   //statelization
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,8 +61,7 @@ function ModalUser(props) {
     }
     //submit data
     let data = await postCreateUser(email, password, username, role, image);
-   
-    
+
     if (data && data.EC === 0) {
       toast.success("Add user success", {
         position: toast.POSITION.TOP_RIGHT,
@@ -72,7 +71,6 @@ function ModalUser(props) {
       });
       handleClose();
       setPage(1);
-        
     }
     if (data && data.EC !== 0) {
       toast.error(data.EM, {
@@ -83,7 +81,6 @@ function ModalUser(props) {
       });
     }
     // re render
- 
   };
   //validate
   const validateEmail = (email) => {
@@ -94,9 +91,7 @@ function ModalUser(props) {
       );
   };
   // return
-  if(props.modalUpdateUser===true){
-
-  }
+  
   return (
     <>
       {/* <Button variant="primary" onClick={handleShow}>

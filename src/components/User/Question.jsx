@@ -69,7 +69,7 @@ const Question = (props) => {
             );
           })}
         </div>
-        <div className="footer">
+        <div style={{marginBottom:"10px"}} className="footer">
           {currentQuestion !== 0 && (
             <button
               onClick={() => {
