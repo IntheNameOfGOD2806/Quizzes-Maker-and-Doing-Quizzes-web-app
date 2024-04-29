@@ -6,14 +6,14 @@ const INITIAL_STATE = {
         username: "",
         image: "",
         role: "",
-        email:'',
+        email: '',
     },
     isAuthenticated: false,
 };
 const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case USER_LOGIN_SUCCESS:
-            const  DT  = action.payload.DT;
+            const DT = action.payload.DT;
             return {
                 ...state,
                 account: {
@@ -22,7 +22,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
                     username: DT?.username,
                     image: DT?.image,
                     role: DT?.role
-                    ,email:DT?.email
+                    , email: DT?.email
                 },
                 isAuthenticated: true
             };

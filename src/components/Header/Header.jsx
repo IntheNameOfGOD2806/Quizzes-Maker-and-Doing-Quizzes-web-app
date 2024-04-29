@@ -7,12 +7,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { userLogout } from "../../redux/action/authAction";
 import { postUserLogOut } from "../../services/apiservice";
+import { useTranslation } from "react-i18next";
 
 import { useState } from "react";
 import Language from "./language";
 import ModalUserProfile from "./ModalUserProfile";
 const Header = () => {
-const[show,setShow]=useState(false);
+  const { t, i18n } = useTranslation();
+  const [show, setShow] = useState(false);
   const email = useSelector((state) => state.user.account.email);
   const refresh_token = useSelector(
     (state) => state.user.account.refresh_token
@@ -64,13 +66,13 @@ const[show,setShow]=useState(false);
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <NavLink className="nav-link " to="/">
-                Home
+                {t("header.Home")}
               </NavLink>
               <NavLink className=" nav-link" to="/user">
-                User
+                {t("header.User")}
               </NavLink>
               <NavLink className=" nav-link" to="/Admin">
-                Admin
+                {t("header.Admin")}
               </NavLink>
             </Nav>
             <Nav>
@@ -87,7 +89,9 @@ const[show,setShow]=useState(false);
                     {" "}
                     Log Out
                   </NavDropdown.Item>
-                  <NavDropdown.Item onClick={() => setShow(true)}>Profile</NavDropdown.Item>
+                  <NavDropdown.Item onClick={() => setShow(true)}>
+                    Profile
+                  </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item>Separated link</NavDropdown.Item>
                 </NavDropdown>
@@ -111,10 +115,7 @@ const[show,setShow]=useState(false);
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <ModalUserProfile
-      show={show}
-      onHide={() => setShow(false)}
-      />
+      <ModalUserProfile show={show} onHide={() => setShow(false)} />
     </>
   );
 };

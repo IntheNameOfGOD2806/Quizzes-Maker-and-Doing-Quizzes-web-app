@@ -32,6 +32,7 @@ const Login = (props) => {
     let data = await postLogin(email, password);
     if (data && data.EC === 0) {
       //shoot the data to redux
+      console.log(data);
       dispatch(userLoginSucces(data));
 
       toast.success(data.EM, {

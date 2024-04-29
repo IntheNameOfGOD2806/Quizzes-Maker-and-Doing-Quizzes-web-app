@@ -6,20 +6,17 @@ import "./DetailQuiz.scss";
 import ModalResult from "./ModalResult";
 import Question from "./Question";
 import RightContent from "./content/RightContent";
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 function Breadcrumb1() {
   return (
     <Breadcrumb>
       <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-      <Breadcrumb.Item href="/user">
-        User
-      </Breadcrumb.Item>
+      <Breadcrumb.Item href="/user">User</Breadcrumb.Item>
       <Breadcrumb.Item active>Doing Quiz</Breadcrumb.Item>
     </Breadcrumb>
   );
 }
-
 
 const DetailQuiz = (props) => {
   const { id } = useParams();
@@ -28,7 +25,7 @@ const DetailQuiz = (props) => {
   const [showModalResult, setShowModalResult] = useState(false);
   const [dataModalResult, setDataModalResult] = useState({});
   const [showAnswer, setShowAnswer] = useState(false);
-  const[stopTimer,setStopTimer] = useState(false);
+  const [stopTimer, setStopTimer] = useState(false);
   //   console.log(listQuestion);
   const location = useLocation();
   const submitAnswer = async () => {
@@ -49,7 +46,7 @@ const DetailQuiz = (props) => {
     if (res && res.EC === 0) {
       console.log("check system asnw", res.DT.quizData);
       const cloneListQuestion = _.cloneDeep(listQuestion);
-      console.log(cloneListQuestion);
+      // console.log(cloneListQuestion);
       for (let i = 0; i < res.DT.quizData.length; i++) {
         const questionID = res.DT.quizData[i].questionId;
         const listCorrectAnswerId = [];
@@ -65,12 +62,12 @@ const DetailQuiz = (props) => {
               ].answers[index].isCorrect = true;
             }
           }
-          console.log(listCorrectAnswerId)
+          console.log(listCorrectAnswerId);
         }
         // cloneListQuestion.findIndex(q=>q.)
       }
-      console.log(cloneListQuestion);
-      setListQuestion(cloneListQuestion)
+      // console.log(cloneListQuestion);
+      setListQuestion(cloneListQuestion);
       setShowModalResult(true);
       setDataModalResult(res.DT);
       setStopTimer(true);
@@ -122,10 +119,11 @@ const DetailQuiz = (props) => {
     fetchQuizData();
   }, [id]);
   return (
-    <> <div style={{margin:"30px 0px 0px 40px"}}>
-
-    <Breadcrumb1/>
-    </div>
+    <>
+      {" "}
+      <div style={{ margin: "30px 0px 0px 40px" }}>
+        <Breadcrumb1 />
+      </div>
       <div className="detail-quiz-container">
         <div className="left-content">
           <div className="title">
@@ -137,7 +135,6 @@ const DetailQuiz = (props) => {
           </div>
           <Question
             showAnswer={showAnswer}
-           
             currentQuestion={currentQuestion}
             listQuestion={listQuestion}
             setCurrentQuestion={setCurrentQuestion}
@@ -146,7 +143,6 @@ const DetailQuiz = (props) => {
           />
           <ModalResult
             setShowAnswer={setShowAnswer}
-
             show={showModalResult}
             setShow={setShowModalResult}
             dataModalResult={dataModalResult}

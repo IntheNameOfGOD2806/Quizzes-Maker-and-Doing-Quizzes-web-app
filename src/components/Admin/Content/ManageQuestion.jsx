@@ -50,17 +50,16 @@ const ManageQuestion = (props) => {
       });
     }
   };
-  const fetchQuizWithQA = async (quizId) => {
-    let res = await getQuizWithQA(quizId);
-    if (res && res.EC === 0) {
-      setListQuestion(res.DT.qa);
-    }
-  };
+  // const fetchQuizWithQA = async (quizId) => {
+  //   let res = await getQuizWithQA(quizId);
+  //   if (res && res.EC === 0) {
+  //     setListQuestion(res.DT.qa);
+  //   }
+  // };
   useEffect(() => {
     fetchQuizData();
   }, []);
   useEffect(() => {
-    // fetchQuizWithQA(selectedQuiz.value);
     setListQuestion([]);
     setPreviewImage([]);
   }, [selectedQuiz]);
@@ -181,6 +180,7 @@ const ManageQuestion = (props) => {
         imageFile: URL.createObjectURL(file),
         imageName: file.name,
         isShow: false,
+        // index same as Qindex
         id: index,
       };
       clonePreviewImage.push(item);
@@ -188,9 +188,9 @@ const ManageQuestion = (props) => {
       setPreviewImage(clonePreviewImage);
     }
   };
-  const getImageIndexByImageID = (questionId) => {
+  const getImageIndexByImageID = (questionIndex) => {
     const clonePreviewImage = [...previewImage];
-    const index = clonePreviewImage.findIndex((img) => img.id === questionId);
+    const index = clonePreviewImage.findIndex((img) => img.id === questionIndex);
     return index;
   };
   const handleShowImagePreview = (index) => {
@@ -259,7 +259,7 @@ const ManageQuestion = (props) => {
       }
     });
     //call api
-    if (checkValidate ) {
+    if (checkValidate) {
       for (const question of listQuestion) {
         const q = await postCreateNewQuestionForQuiz(
           selectedQuiz.value,
@@ -279,14 +279,13 @@ const ManageQuestion = (props) => {
             answer.description,
             answer.isCorrect
           );
-          
         }
         if (a.EC !== 0) {
-            toast.error(a.EM);
-            return;
-          } else if (a.EC === 0) {
-            toast.success(a.EM, { theme: "dark" });
-          }
+          toast.error(a.EM);
+          return;
+        } else if (a.EC === 0) {
+          toast.success(a.EM, { theme: "dark" });
+        }
       }
     }
   };

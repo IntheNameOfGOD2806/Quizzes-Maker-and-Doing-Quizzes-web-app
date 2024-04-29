@@ -1,9 +1,14 @@
 {
+  "header": {
+    "Home": "Trang chủ",
+    "User": "Nguời dùng",
+    "Admin": "Quản trị viên"
+  },
   "title": "Các hình thức phá vỡ chuẩn mực",
   "description": {
     "part1": "Nhận thêm dữ liệu - như đăng ký, phản hồi và bất cứ điều gì khác, với hình thức được thiết kế",
     "part2": "Làm mới khác nhau.",
-    "part3":"Làm bài kiểm tra ngay bây giờ !!!",
+    "part3": "Làm bài kiểm tra ngay bây giờ !!!",
     "part4": "Bắt đầu ngay bây giờ"
   }
 }
