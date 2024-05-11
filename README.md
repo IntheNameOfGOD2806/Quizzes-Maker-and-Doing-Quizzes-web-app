@@ -1,6 +1,37 @@
 # Backend of this project can be found here:
 https://github.com/IntheNameOfGOD2806/Back-end-quizzmaker
+# Technology Stack
 
+## Front-End:
+- HTML, CSS (SCSS), JavaScript
+- ReactJS (Redux, React Router DOM)
+- Bootstrap 4, React Bootstrap
+
+## Back-End (Backend provided and developed by another developer):
+- Node.js (NestJS)
+- MySQL
+
+# Main Features:
+- **User and Quiz Management:**  create, read, update, and delete users and quizzes .
+  
+- **Question and Answer Management:**  manage questions and answers for each quiz, ensuring a comprehensive learning experience.
+  
+- **Authorization:** Secure user access with JSON Web Token authentication and Redux persist .
+  
+- **Interactive Quizzing:** receive real-time results, and review correct and incorrect answers for each question.
+  
+- **Personalized Assignments:** Assign quizzes to specific users to customize their learning journey.
+  
+- **Admin Functionality:** Access advanced administrative features, including viewing statistics presented in charts and numerical formats.
+  
+- **Multilingual Support:** Experience the landing page in two languages—Vietnamese and English—for broader accessibility and reach.
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+      
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
