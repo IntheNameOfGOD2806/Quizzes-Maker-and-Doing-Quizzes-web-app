@@ -1,6 +1,6 @@
 # Backend of this project can be found here:
 https://github.com/IntheNameOfGOD2806/Back-end-quizzmaker
-# Technology Stack
+# Technology
 
 ## Front-End:
 - HTML, CSS (SCSS), JavaScript
